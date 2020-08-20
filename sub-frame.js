@@ -58,7 +58,7 @@ function accessStorage(fn) {
 }
 
 function init() {
-  var data = Cookies.get('finger_advanced') || '(none)';
+  var data = Cookies.get('finger_advanced') || 'No hash';
   var updateEvent = new CustomEvent('hashPlace:updated', {
     bubbles: true,
     cancelable: false,
@@ -67,16 +67,15 @@ function init() {
     },
   });
   hashPlace.dispatchEvent(updateEvent);
+  hashPlace.innerHTML = data;
   btn.click()
 }
 
 function attachEventHandlers() {
   if (!storageAccessAPISupported()) {
-      console.log('BBBBBBBBBBBB');
       btn.addEventListener('click',  hashSetStorageUnsupported);
   }
   else {
-      console.log('AAAAAAAAAAAAAAAA');
       btn.addEventListener('click', accessStorage.bind(null, hashSetStorage));
   }
 }
