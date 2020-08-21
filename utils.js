@@ -1,6 +1,6 @@
 setFingerToStorage = (finger, script, storageAccessApi) => {
     Cookies.set('finger_' + script, finger);
-    var data = Cookies.get('finger_' + script) || '(none)';
+    var data ='(none)';
     var updateEvent = new CustomEvent('uid:updated', {
         bubbles: true,
         cancelable: false,
@@ -12,17 +12,17 @@ setFingerToStorage = (finger, script, storageAccessApi) => {
 };
 
 
-sendDataToServ = (fingerprint, script, destination, storageAccessApi) => {
+sendDataToServ = async (fingerprint, script, storageAccessApi) => {
     let old_finger;
-    if (storageAccessApi) {
-        old_finger = Cookies.get('finger_' + script) || null
-    }
+    old_finger = Cookies.get('finger_' + script) || null;
+    const uuid =()=>([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15 >> c/4).toString(16));
+    console.log(SERVER);
     const request_obj = {
-        "sid": old_finger,
+        "sid": uuid(),
         "old_fingerprint": old_finger,
         "current_fingerprint": fingerprint,
     };
     console.log('SEND DATA', request_obj)
-    // $.post(destination, request_obj);
+    // $.post(SERVER, request_obj);
 };
 

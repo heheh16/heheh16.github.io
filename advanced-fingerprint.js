@@ -750,10 +750,9 @@
 
 })();
 
-getFinger = async (destination, storageAccessApi) => {
+getFinger = async (storageAccessApi) => {
     const scriptName = 'advanced';
     const components = await AdvancedFingerprint.getPromise();
-    console.log('CCCCCCCCCCCCCCCCCCCCC', components);
     let murmur;
     if (Object.keys(components).length > 0) {
         let data = {};
@@ -762,10 +761,11 @@ getFinger = async (destination, storageAccessApi) => {
             return component.value
         });
         murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
-        sendDataToServ(murmur, scriptName, destination, storageAccessApi);
-        setFingerToStorage(murmur, scriptName, storageAccessApi)
+        await sendDataToServ(murmur, scriptName, storageAccessApi);
+        await setFingerToStorage(murmur, scriptName, storageAccessApi);
+        return Cookies.get('finger_'+scriptName)
     }
-    return murmur
+    return 'No hash'
 };
 
 
