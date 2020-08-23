@@ -1,5 +1,5 @@
 setFingerToStorage = (finger, script, storageAccessApi) => {
-    document.cookie = `finger_${script}=${finger}; SameSite=None`;
+    document.cookie = `finger_${script}=${finger}; SameSite=None; Secure`;
     var data ='(none)';
     var updateEvent = new CustomEvent('uid:updated', {
         bubbles: true,
