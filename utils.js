@@ -1,14 +1,5 @@
 setFingerToStorage = (finger, script, storageAccessApi) => {
     localStorage.setItem(`finger_${script}`,finger);
-    var data ='(none)';
-    var updateEvent = new CustomEvent('uid:updated', {
-        bubbles: true,
-        cancelable: false,
-        detail: {
-            finger_advanced: data,
-        },
-    });
-    hashPlace.dispatchEvent(updateEvent);
 };
 
 

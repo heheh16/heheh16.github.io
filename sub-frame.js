@@ -1,14 +1,4 @@
-Cookies.defaults = {
-    expires: 365,
-    path: '',
-    domain: window.location.hostname.split('.').slice(-2).join('.'),
-};
-
-hashSetStorage = async () => {
-    const advanced_finger = await getFinger(true);
-    hashPlace.innerHTML = advanced_finger
-};
-hashSetStorageUnsupported = async () => {
+hashSetStorage= async () => {
     const advanced_finger = await getFinger(false);
     hashPlace.innerHTML = advanced_finger
 };
@@ -24,63 +14,14 @@ function ready(fn) {
     }
 }
 
-function storageAccessAPISupported() {
-    return (
-        'hasStorageAccess' in document &&
-        'requestStorageAccess' in document
-    );
-}
-
-function accessStorage(fn) {
-    document.hasStorageAccess()
-        .then(function (hasAccess) {
-            if (hasAccess) {
-                console.info('Storage API Access already granted');
-                fn();
-                return;
-            }
-
-            console.info('no existing Storage API Access ...');
-            console.info('requesting Storage API Access ...');
-
-            document.requestStorageAccess()
-                .then(function () {
-                    console.info('Storage API Access granted.');
-                    fn();
-                    return;
-                }, function () {
-                    console.warn('Storage API Access denied.');
-                });
-        }, function (reason) {
-            console.warn('something went wrong ...');
-            console.log(reason);
-        });
-}
-
 function init() {
-    var data = localStorage.getItem('finger_advanced') || 'No hash';
-    var updateEvent = new CustomEvent('hashPlace:updated', {
-        bubbles: true,
-        cancelable: false,
-        detail: {
-            hashPlace: data,
-        },
-    });
-    hashPlace.dispatchEvent(updateEvent);
+    const data = localStorage.getItem('finger_advanced') || 'No hash';
     hashPlace.innerHTML = data;
+    btn.addEventListener('click', hashSetStorage);
     btn.click()
 }
 
-function attachEventHandlers() {
-    if (!storageAccessAPISupported()) {
-        btn.addEventListener('click', hashSetStorageUnsupported);
-    } else {
-        btn.addEventListener('click', accessStorage.bind(null, hashSetStorage));
-    }
-}
-
 function onReady() {
-    attachEventHandlers();
     init();
 }
 
