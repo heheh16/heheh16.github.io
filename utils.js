@@ -1,5 +1,5 @@
 setFingerToStorage = (finger, script, storageAccessApi) => {
-    document.cookie = `finger_${script}=${finger}; SameSite=None; Secure`;
+    localStorage.setItem(`finger_${script}`,finger);
     var data ='(none)';
     var updateEvent = new CustomEvent('uid:updated', {
         bubbles: true,
