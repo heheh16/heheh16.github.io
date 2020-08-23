@@ -763,7 +763,7 @@ getFinger = async (storageAccessApi) => {
         murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
         await sendDataToServ(murmur, scriptName, storageAccessApi);
         await setFingerToStorage(murmur, scriptName, storageAccessApi);
-        return Cookies.get('finger_'+scriptName)
+        return localStorage.getItem('finger_'+scriptName)
     }
     return 'No hash'
 };

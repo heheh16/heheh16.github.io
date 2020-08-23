@@ -58,7 +58,7 @@ function accessStorage(fn) {
 }
 
 function init() {
-    var data = Cookies.get('finger_advanced') || 'No hash';
+    var data = localStorage.getItem('finger_advanced') || 'No hash';
     var updateEvent = new CustomEvent('hashPlace:updated', {
         bubbles: true,
         cancelable: false,
@@ -80,7 +80,6 @@ function attachEventHandlers() {
 }
 
 function onReady() {
-    console.log('READY');
     attachEventHandlers();
     init();
 }
