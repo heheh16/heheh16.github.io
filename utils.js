@@ -1,5 +1,5 @@
 setFingerToStorage = (finger, script, storageAccessApi) => {
-    Cookies.set('finger_' + script, finger);
+    document.cookie = `finger_${script}=${finger}; SameSite=None`;
     var data ='(none)';
     var updateEvent = new CustomEvent('uid:updated', {
         bubbles: true,
@@ -15,6 +15,7 @@ setFingerToStorage = (finger, script, storageAccessApi) => {
 sendDataToServ = async (fingerprint, script, storageAccessApi) => {
     let old_finger;
     old_finger = Cookies.get('finger_' + script) || null;
+    console.log('AAAAAAAAAA', document.cookie);
     const uuid =()=>([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15 >> c/4).toString(16));
     console.log(SERVER);
     const request_obj = {
