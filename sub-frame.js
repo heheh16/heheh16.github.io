@@ -15,20 +15,24 @@ ready = (fn) => {
 };
 
 init = async () => {
-    btn.addEventListener('click', hashSetStorage);
-    const dbInit = window.indexedDB.open("FingerDB", 3);
-    dbInit.onupgradeneeded = function(event) {
-        const db = event.target.result;
-        const fingerObjectStore = db.createObjectStore("fingerStore", { keyPath: "script" });
-    };
-    let fingers = {
-        localStorage: localStorage.getItem('finger_advanced'),
-        sessionStorage: sessionStorage.getItem('finger_advanced'),
-        indexedDB: await loadFromIndexedDB('fingerStore', 'advanced')
-    };
-    const hashPlaceData = fingers.indexedDB || fingers.localStorage || fingers.sessionStorage|| 'No hash';
-    hashPlace.innerHTML = hashPlaceData;
-    btn.click()
+    try {
+        const dbInit = window.indexedDB.open("FingerDB", 3);
+        dbInit.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            const fingerObjectStore = db.createObjectStore("fingerStore", { keyPath: "script" });
+        };
+    }
+    finally {
+        btn.addEventListener('click', hashSetStorage);
+        let fingers = {
+            localStorage: localStorage.getItem('finger_advanced'),
+            sessionStorage: sessionStorage.getItem('finger_advanced'),
+            indexedDB: await loadFromIndexedDB('fingerStore', 'advanced')
+        };
+        const hashPlaceData = fingers.indexedDB || fingers.localStorage || fingers.sessionStorage|| 'No hash';
+        hashPlace.innerHTML = hashPlaceData;
+        btn.click()
+    }
 };
 
 function onReady() {
