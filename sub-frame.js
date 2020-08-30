@@ -22,6 +22,9 @@ init = async () => {
             const fingerObjectStore = db.createObjectStore("fingerStore", { keyPath: "script" });
         };
     }
+    catch (e) {
+
+    }
     finally {
         btn.addEventListener('click', hashSetStorage);
         let fingers = {

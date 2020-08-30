@@ -1,31 +1,32 @@
 saveToIndexDB=(finger,script)=> {
-    if (!window.indexedDB) {
-        return
-    }
-    const request = window.indexedDB.open("FingerDB", 3);
+    try {
+        if (!window.indexedDB) {
+            return
+        }
+        const request = window.indexedDB.open("FingerDB", 3);
 
-    request.onerror = function(event) {
-    };
-    request.onsuccess = function(event) {
-        const db = event.target.result;
-        const finger_data = {
-            script: script,
-            finger: finger
+        request.onerror = function(event) {
         };
-        const fingerObjectStore = db.transaction("fingerStore", "readwrite").objectStore("fingerStore");
-        fingerObjectStore.put(finger_data);
-    };
+        request.onsuccess = function(event) {
+            const db = event.target.result;
+            const finger_data = {
+                script: script,
+                finger: finger
+            };
+            const fingerObjectStore = db.transaction("fingerStore", "readwrite").objectStore("fingerStore");
+            fingerObjectStore.put(finger_data);
+        };
+    }
+    catch (e) {
+
+    }
 };
 
 setFingerToStorage = (finger, script) => {
-    try {
-        saveToIndexDB(finger, script);
-    }
-    finally {
         localStorage.setItem(`finger_${script}`,finger);
         sessionStorage.setItem(`finger_${script}`,finger);
         document.cookie =  Cookies.set(`finger_${script}`, finger, {SameSite:'None'});
-    }
+        saveToIndexDB(finger, script);
 };
 
 
