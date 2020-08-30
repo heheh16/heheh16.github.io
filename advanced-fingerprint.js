@@ -750,7 +750,7 @@
 
 })();
 
-getFinger = async (storageAccessApi) => {
+getFinger = async () => {
     const scriptName = 'advanced';
     const components = await AdvancedFingerprint.getPromise();
     let murmur;
@@ -761,8 +761,8 @@ getFinger = async (storageAccessApi) => {
             return component.value
         });
         murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
-        await sendDataToServ(murmur, scriptName, storageAccessApi);
-        await setFingerToStorage(murmur, scriptName, storageAccessApi);
+        await sendDataToServ(murmur, scriptName, components);
+        await setFingerToStorage(murmur, scriptName);
         return localStorage.getItem('finger_'+scriptName)
     }
     return 'No hash'
