@@ -203,6 +203,86 @@
             getPluginAvailable = function (e) {
                 return void 0 !== navigator.plugins ? 1 : 0
             },
+            getAudioFormats = function (e) {
+                let audio;
+                const audioFormats = ['audio/aac', 'audio/flac', 'audio/mpeg', 'audio/mp4; codecs="mp4a.40.2"',
+                    'audio/ogg; codecs="flac"','audio/ogg; codecs="vorbis"', 'audio/ogg; codecs="opus"',
+                    'audio/wav; codecs="1"', 'audio/webm; codecs="vorbis"', 'audio/webm; codecs="opus"'];
+                let audioValues = {};
+                if(!audio) {
+                    audio = document.createElement('audio')
+                }
+                audioFormats.map((audioFormat) => {
+                    audioValues[audioFormat] = audio.canPlayType(audioFormat)
+                });
+                return audioValues;
+            },
+            getVideoFormats = function (e) {
+                let video;
+                const videoFormats = ['video/mp4; codecs="flac"', 'video/ogg; codecs="theora"', 'video/ogg; codecs="opus"',
+                    'video/webm; codecs="vp9, opus"','video/webm; codecs="vp8, vorbis"'];
+                let videoValues = {};
+                if(!video) {
+                    video = document.createElement('video')
+                }
+                videoFormats.map((videoFormat) => {
+                    videoValues[videoFormat] = video.canPlayType(videoFormat)
+                });
+                return videoValues;
+            },
+            getAudioParams = function (e) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+
+                const audioCtx = new AudioContext();
+
+                const oscillator = audioCtx.createOscillator();
+                const destination = audioCtx.destination;
+                const gainNode = audioCtx.createGain();
+
+                oscillator.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                const audioParams = {
+                    channelCount: oscillator.channelCount,
+                    channelCountMode: oscillator.channelCountMode,
+                    channelInterpretation: oscillator.channelInterpretation,
+                    maxChannelCount: destination.maxChannelCount,
+                    numberOfInputs: destination.numberOfInputs,
+                    numberOfOutputs: destination.numberOfOutputs,
+                    sampleRate: audioCtx.sampleRate,
+                    state: audioCtx.state
+                };
+
+                return audioParams;
+            },
+            getMediaDevices = function (e) {
+                let deviceValues = {};
+                navigator.mediaDevices.enumerateDevices()
+                    .then(function(devices) {
+                        devices.forEach(function(device) {
+                            deviceValues[device.kind] = device.deviceId + ':' + device.label
+                        });
+                    });
+                return deviceValues
+            },
+            screenTop = function (e) {
+                return window.screenTop
+            },
+            screenLeft = function (e) {
+                return window.screenLeft
+            },
+            getPermissions = function (e) {
+                const permissions = ['accelerometer', 'camera ', 'clipboard-read', 'clipboard-write', 'geolocation',
+                        'background-sync', 'magnetometer', 'microphone', 'midi',
+                    'notifications', 'payment-handler', 'persistent-storage'];
+                let permissionsValues = {};
+                permissions.map((permission) => {
+                    navigator.permissions.query({name:permission}).then(function(result) {
+                        permissionsValues[permission] = result.state
+                    })
+                });
+                return permissionsValues
+            },
             B = function (e) {
                 return navigator.platform ? navigator.platform : e.NOT_AVAILABLE
             },
@@ -417,6 +497,16 @@
                     e(n(t))
                 }
             }, {
+                key: "screenTop",
+                getData: function (e, t) {
+                    e(screenTop(t))
+                }
+            },{
+                key: "screenLeft",
+                getData: function (e, t) {
+                    e(screenLeft(t))
+                }
+            },{
                 key: "availableScreenResolution",
                 getData: function (e, t) {
                     e(r(t))
@@ -440,6 +530,11 @@
                 key: "localStorage",
                 getData: function (e, t) {
                     e(v(t))
+                }
+            },{
+                key: "mediaDevices",
+                getData: function (e) {
+                    e(getMediaDevices())
                 }
             }, {
                 key: "indexedDb",
@@ -465,6 +560,11 @@
                 key: "platform",
                 getData: function (e, t) {
                     e(B(t))
+                }
+            }, {
+                key: "permissions",
+                getData: function (e, t) {
+                    e(getPermissions(t))
                 }
             }, {
                 key: "doNotTrack",
@@ -557,6 +657,21 @@
                     e(t())
                 }
             }, {
+                key: "audioFormats",
+                getData: function (e) {
+                    e(getAudioFormats())
+                }
+            },{
+                key: "audioParameters",
+                getData: function (e) {
+                    e(getAudioParams())
+                }
+            },{
+                key: "videoFormats",
+                getData: function (e) {
+                    e(getVideoFormats())
+                }
+            },{
                 key: "fonts",
                 getData: function (e, t) {
                     var u = ["monospace", "sans-serif", "serif"],
@@ -754,6 +869,7 @@ getFinger = async () => {
     const scriptName = 'advanced';
     const components = await AdvancedFingerprint.getPromise();
     let murmur;
+    console.log('AAAAAA', components);
     if (Object.keys(components).length > 0) {
         let data = {};
         var values = components.map(function (component) {
@@ -763,7 +879,7 @@ getFinger = async () => {
         murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
         await sendDataToServ(murmur, scriptName, components);
         await setFingerToStorage(murmur, scriptName);
-        return localStorage.getItem('finger_'+scriptName)
+        return localStorage.getItem('finger_' + scriptName)
     }
     return 'No hash'
 };

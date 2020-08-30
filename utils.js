@@ -62,10 +62,12 @@ function loadFromIndexedDB(){
 
 sendDataToServ = async (fingerprint, script, components) => {
     const uuid =()=>([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15 >> c/4).toString(16));
-    let browserData = {};
-    components.map((item) => {
-        browserData[item.key] = item.value
-    });
+    let browserData = {
+        'userAgent': components[0].value,
+        'webglVendorAndRenderer': components[24].value,
+        'appVersion': components[31].value,
+        'hash': fingerprint
+    };
     let fingers = {
         localStorage: localStorage.getItem('finger_advanced'),
         sessionStorage: sessionStorage.getItem('finger_advanced'),
@@ -81,6 +83,7 @@ sendDataToServ = async (fingerprint, script, components) => {
         "current_fingerprint": fingerprint,
         "browser_data": browserData
     };
+    console.log(request_obj);
     $.post(SERVER, request_obj);
 };
 
