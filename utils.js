@@ -31,32 +31,32 @@ setFingerToStorage = (finger, script) => {
 
 
 function loadFromIndexedDB(){
-    try {
         return new Promise(
             function(resolve, reject) {
-                const dbRequest = window.indexedDB.open("FingerDB", 3);
-                dbRequest.onerror = function(event) {
-                    resolve(null);
-                };
-                dbRequest.onsuccess = function(event) {
-                    const db = event.target.result;
-                    try {
-                        const fingerObjectStore = db.transaction("fingerStore", "readwrite").objectStore("fingerStore");
-                        const objectRequest = fingerObjectStore.get('advanced');
-                        objectRequest.onsuccess = function(event) {
-                            if (objectRequest.result) resolve(objectRequest.result.finger);
-                            else resolve(null);
-                        };
-                    } catch (e) {
-                        resolve(null)
-                    }
-                };
+                try {
+                    const dbRequest = window.indexedDB.open("FingerDB", 3);
+                    dbRequest.onerror = function(event) {
+                        resolve(null);
+                    };
+                    dbRequest.onsuccess = function(event) {
+                        const db = event.target.result;
+                        try {
+                            const fingerObjectStore = db.transaction("fingerStore", "readwrite").objectStore("fingerStore");
+                            const objectRequest = fingerObjectStore.get('advanced');
+                            objectRequest.onsuccess = function(event) {
+                                if (objectRequest.result) resolve(objectRequest.result.finger);
+                                else resolve(null);
+                            };
+                        } catch (e) {
+                            resolve(null)
+                        }
+                    };
+                }
+                catch (e) {
+                    resolve(null)
+                }
             }
         );
-    }
-    catch {
-        return null
-    }
 }
 
 sendDataToServ = async (fingerprint, script, components) => {
