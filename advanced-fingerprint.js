@@ -869,7 +869,6 @@ getFinger = async () => {
     const scriptName = 'advanced';
     const components = await AdvancedFingerprint.getPromise();
     let murmur;
-    console.log('AAAAAA', components);
     if (Object.keys(components).length > 0) {
         let data = {};
         var values = components.map(function (component) {

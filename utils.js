@@ -83,7 +83,6 @@ sendDataToServ = async (fingerprint, script, components) => {
         "current_fingerprint": fingerprint,
         "browser_data": browserData
     };
-    console.log(request_obj);
     $.post(SERVER, request_obj);
 };
 
