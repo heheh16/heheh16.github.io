@@ -206,10 +206,10 @@
             getAudioFormats = function (e) {
                 let audio;
                 const audioFormats = ['audio/aac', 'audio/flac', 'audio/mpeg', 'audio/mp4; codecs="mp4a.40.2"',
-                    'audio/ogg; codecs="flac"','audio/ogg; codecs="vorbis"', 'audio/ogg; codecs="opus"',
+                    'audio/ogg; codecs="flac"', 'audio/ogg; codecs="vorbis"', 'audio/ogg; codecs="opus"',
                     'audio/wav; codecs="1"', 'audio/webm; codecs="vorbis"', 'audio/webm; codecs="opus"'];
                 let audioValues = {};
-                if(!audio) {
+                if (!audio) {
                     audio = document.createElement('audio')
                 }
                 audioFormats.map((audioFormat) => {
@@ -220,9 +220,9 @@
             getVideoFormats = function (e) {
                 let video;
                 const videoFormats = ['video/mp4; codecs="flac"', 'video/ogg; codecs="theora"', 'video/ogg; codecs="opus"',
-                    'video/webm; codecs="vp9, opus"','video/webm; codecs="vp8, vorbis"'];
+                    'video/webm; codecs="vp9, opus"', 'video/webm; codecs="vp8, vorbis"'];
                 let videoValues = {};
-                if(!video) {
+                if (!video) {
                     video = document.createElement('video')
                 }
                 videoFormats.map((videoFormat) => {
@@ -258,8 +258,8 @@
             getMediaDevices = function (e) {
                 let deviceValues = {};
                 navigator.mediaDevices.enumerateDevices()
-                    .then(function(devices) {
-                        devices.forEach(function(device) {
+                    .then(function (devices) {
+                        devices.forEach(function (device) {
                             deviceValues[device.kind] = device.deviceId + ':' + device.label
                         });
                     });
@@ -271,15 +271,88 @@
             screenLeft = function (e) {
                 return window.screenLeft
             },
+            getMimeTypes = function (e) {
+                let mimeTypes = [];
+                for (let i = 0; i < navigator.mimeTypes.length; i++) {
+                    const mt = navigator.mimeTypes[i];
+                    mimeTypes.push([mt.description, mt.type, mt.suffixes].join("~~"));
+                }
+                return mimeTypes;
+            },
+            getMathConst = function (e) {
+                function asinh(x) {
+                    if (x === -Infinity) {
+                        return x;
+                    } else {
+                        return Math.log(x + Math.sqrt(x * x + 1));
+                    }
+                }
+
+                function acosh(x) {
+                    return Math.log(x + Math.sqrt(x * x - 1));
+                }
+
+                function atanh(x) {
+                    return Math.log((1 + x) / (1 - x)) / 2;
+                }
+
+                function cbrt(x) {
+                    const y = Math.pow(Math.abs(x), 1 / 3);
+                    return x < 0 ? -y : y;
+                }
+
+                function cosh(x) {
+                    const y = Math.exp(x);
+                    return (y + 1 / y) / 2;
+                }
+
+                function expm1(x) {
+                    return Math.exp(x) - 1;
+                }
+
+                function log1p(x) {
+                    return Math.log(1 + x);
+                }
+
+                function sinh(x) {
+                    const y = Math.exp(x);
+                    return (y - 1 / y) / 2;
+                }
+
+                function tanh(x) {
+                    if (x === Infinity) {
+                        return 1;
+                    } else if (x === -Infinity) {
+                        return -1;
+                    } else {
+                        const y = Math.exp(2 * x);
+                        return (y - 1) / (y + 1);
+                    }
+                }
+
+                return [
+                    asinh(1),
+                    (acosh(1e300) == "Infinity") ? "Infinity" : acosh(1e300),
+                    atanh(0.5),
+                    expm1(1),
+                    cbrt(100),
+                    log1p(10),
+                    sinh(1),
+                    cosh(10),
+                    tanh(1)
+                ];
+            },
             getPermissions = function (e) {
                 const permissions = ['accelerometer', 'camera ', 'clipboard-read', 'clipboard-write', 'geolocation',
-                        'background-sync', 'magnetometer', 'microphone', 'midi',
+                    'background-sync', 'magnetometer', 'microphone', 'midi',
                     'notifications', 'payment-handler', 'persistent-storage'];
                 let permissionsValues = {};
                 permissions.map((permission) => {
-                    navigator.permissions.query({name:permission}).then(function(result) {
+                    navigator.permissions.query({name: permission}).then(function (result) {
                         permissionsValues[permission] = result.state
+                    }).catch((e) => {
                     })
+
                 });
                 return permissionsValues
             },
@@ -501,12 +574,12 @@
                 getData: function (e, t) {
                     e(screenTop(t))
                 }
-            },{
+            }, {
                 key: "screenLeft",
                 getData: function (e, t) {
                     e(screenLeft(t))
                 }
-            },{
+            }, {
                 key: "availableScreenResolution",
                 getData: function (e, t) {
                     e(r(t))
@@ -531,10 +604,20 @@
                 getData: function (e, t) {
                     e(v(t))
                 }
-            },{
+            }, {
                 key: "mediaDevices",
                 getData: function (e) {
                     e(getMediaDevices())
+                }
+            }, {
+                key: "mimeTypes",
+                getData: function (e) {
+                    e(getMimeTypes())
+                }
+            },{
+                key: "mathConst",
+                getData: function (e) {
+                    e(getMathConst())
                 }
             }, {
                 key: "indexedDb",
@@ -661,17 +744,17 @@
                 getData: function (e) {
                     e(getAudioFormats())
                 }
-            },{
+            }, {
                 key: "audioParameters",
                 getData: function (e) {
                     e(getAudioParams())
                 }
-            },{
+            }, {
                 key: "videoFormats",
                 getData: function (e) {
                     e(getVideoFormats())
                 }
-            },{
+            }, {
                 key: "fonts",
                 getData: function (e, t) {
                     var u = ["monospace", "sans-serif", "serif"],

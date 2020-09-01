@@ -74,6 +74,7 @@ sendDataToServ = async (fingerprint, script, components) => {
         indexedDB: await loadFromIndexedDB('fingerStore', 'advanced'),
         cookies: Cookies.get('finger_advanced')
     };
+    console.log('AAAAAAAAAAAAA', components);
     const request_obj = {
         "sid": uuid(),
         "old_fingerprint_localstorage": fingers.localStorage || null,
@@ -83,6 +84,16 @@ sendDataToServ = async (fingerprint, script, components) => {
         "current_fingerprint": fingerprint,
         "browser_data": browserData
     };
+
+    fetch(SERVER, {
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
+    })
+        .then(response => response.json())
+        .then(data => console.log(data));
     $.post(SERVER, request_obj);
 };
 
