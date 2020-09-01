@@ -262,7 +262,8 @@
                         devices.forEach(function (device) {
                             deviceValues[device.kind] = device.deviceId + ':' + device.label
                         });
-                    });
+                    }).catch((e) => {
+                })
                 return deviceValues
             },
             screenTop = function (e) {
