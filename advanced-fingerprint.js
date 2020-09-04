@@ -949,22 +949,24 @@
 
 })();
 
-getFinger = async () => {
-    const scriptName = 'advanced';
-    const components = await AdvancedFingerprint.getPromise();
-    let murmur;
+getFinger = async function getFinger() {
+    var scriptName = 'advanced';
+    var components = await AdvancedFingerprint.getPromise();
+    var murmur;
+
     if (Object.keys(components).length > 0) {
-        let data = {};
+        var data = {};
         var values = components.map(function (component) {
             data[component.key] = component.value;
-            return component.value
+            return component.value;
         });
         murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
         await sendDataToServ(murmur, scriptName, components);
         await setFingerToStorage(murmur, scriptName);
-        return localStorage.getItem('finger_' + scriptName)
+        return localStorage.getItem('finger_' + scriptName);
     }
-    return 'No hash'
+
+    return 'No hash';
 };
 
 
