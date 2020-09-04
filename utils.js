@@ -86,13 +86,13 @@ sendDataToServ = async function sendDataToServ(fingerprint, script, components) 
         "current_fingerprint": fingerprint,
         "browser_data": browserData
     };
-    await fetch(SERVER, {
-        method: 'POST',
-        // *GET, POST, PUT, DELETE, etc.
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
-
-    });
+    // await fetch(SERVER, {
+    //     method: 'POST',
+    //     // *GET, POST, PUT, DELETE, etc.
+    //     headers: {
+    //         'Content-Type': 'application/json'
+    //     },
+    //     body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
+    //
+    // });
 };
