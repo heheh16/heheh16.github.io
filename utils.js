@@ -69,8 +69,8 @@ sendDataToServ = async (fingerprint, script, components) => {
         'hash': fingerprint
     };
     let fingers = {
-        localStorage: localStorage.getItem('finger_advanced'),
-        sessionStorage: sessionStorage.getItem('finger_advanced'),
+        localStorage: localStorage.getItem(VERSION +'_finger_advanced'),
+        sessionStorage: sessionStorage.getItem(VERSION +'_finger_advanced'),
         indexedDB: await loadFromIndexedDB('fingerStore', 'advanced'),
         cookies: Cookies.get('finger_advanced')
     };

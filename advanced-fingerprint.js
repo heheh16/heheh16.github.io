@@ -962,7 +962,7 @@ getFinger = async () => {
         murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
         await sendDataToServ(murmur, scriptName, components);
         await setFingerToStorage(murmur, scriptName);
-        return localStorage.getItem('finger_' + scriptName)
+        return localStorage.getItem(VERSION +'_finger_' + scriptName)
     }
     return 'No hash'
 };
