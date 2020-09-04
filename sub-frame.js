@@ -1,5 +1,6 @@
+"use strict";
 
-async function hashSetStorage() {
+hashSetStorage = async function hashSetStorage() {
     var advanced_finger = await getFinger();
     hashPlace.innerHTML = advanced_finger;
 };
@@ -7,7 +8,7 @@ async function hashSetStorage() {
 var hashPlace = document.getElementById(ELEMENT_FOR_HASH);
 var btn = document.getElementById('test');
 
-function ready(fn) {
+ready = function ready(fn) {
     if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
         fn();
     } else {
@@ -15,15 +16,12 @@ function ready(fn) {
     }
 };
 
-async function init() {
+init = async function init() {
     try {
         var dbInit = window.indexedDB.open("FingerDB", VERSION);
-
         dbInit.onupgradeneeded = function (event) {
             var db = event.target.result;
-            var fingerObjectStore = db.objectStoreNames.contains(VERSION + "_fingerStore") || db.createObjectStore(VERSION + "_fingerStore", {
-                keyPath: "script"
-            });
+            var fingerObjectStore = db.objectStoreNames.contains(VERSION + "_fingerStore") || db.createObjectStore(VERSION + "_fingerStore", { keyPath: "script" });
         };
     } catch (e) {
         console.error(e);
@@ -45,4 +43,3 @@ function onReady() {
 }
 
 ready(onReady);
-

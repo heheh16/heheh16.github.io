@@ -1,50 +1,44 @@
-function saveToIndexDB(finger, script) {
+"use strict";
+
+saveToIndexDB = function saveToIndexDB(finger, script) {
     try {
         if (!window.indexedDB) {
             return;
         }
-
         var request = window.indexedDB.open("FingerDB", VERSION);
 
         request.onerror = function (event) {};
-
         request.onsuccess = function (event) {
             var db = event.target.result;
             var finger_data = {
                 script: script,
                 finger: finger
             };
-            var fingerObjectStore = db.transaction(VERSION + '_fingerStore', "readwrite").objectStore(VERSION + '_fingerStore');
+            var fingerObjectStore = db.transaction(VERSION + "_fingerStore", "readwrite").objectStore(VERSION + "_fingerStore");
             fingerObjectStore.put(finger_data);
         };
     } catch (e) {}
-}
+};
 
-function setFingerToStorage(finger, script) {
-    localStorage.setItem(VERSION + '_finger_${script}', finger);
+setFingerToStorage = function setFingerToStorage(finger, script) {
+    localStorage.setItem(VERSION + "_finger_" + script, finger);
     sessionStorage.setItem(VERSION + "_finger_" + script, finger);
-    document.cookie = Cookies.set(VERSION + "_finger_" + script, finger, {
-        SameSite: 'None'
-    });
+    document.cookie = Cookies.set(VERSION + "_finger_" + script, finger, { SameSite: 'None' });
     saveToIndexDB(finger, script);
-}
+};
 
 function loadFromIndexedDB() {
     return new Promise(function (resolve, reject) {
         try {
             var dbRequest = window.indexedDB.open("FingerDB", VERSION);
-
             dbRequest.onerror = function (event) {
                 resolve(null);
             };
-
             dbRequest.onsuccess = function (event) {
                 var db = event.target.result;
-
                 try {
                     var fingerObjectStore = db.transaction(VERSION + "_fingerStore", "readwrite").objectStore(VERSION + "_fingerStore");
                     var objectRequest = fingerObjectStore.get('advanced');
-
                     objectRequest.onsuccess = function (event) {
                         if (objectRequest.result) resolve(objectRequest.result.finger);else resolve(null);
                     };
@@ -64,7 +58,6 @@ sendDataToServ = async function sendDataToServ(fingerprint, script, components) 
             return (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16);
         });
     };
-
     var browserData = {
         'userAgent': components[0].value,
         'webglVendorAndRenderer': components[24].value,
@@ -86,13 +79,12 @@ sendDataToServ = async function sendDataToServ(fingerprint, script, components) 
         "current_fingerprint": fingerprint,
         "browser_data": browserData
     };
+
     // await fetch(SERVER, {
-    //     method: 'POST',
-    //     // *GET, POST, PUT, DELETE, etc.
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
-    //
-    // });
+    //      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    //      headers: {
+    //          'Content-Type': 'application/json'
+    //      },
+    //      body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
+    //  });
 };
