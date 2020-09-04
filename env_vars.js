@@ -1,5 +1,3 @@
-'use strict';
-
-var SERVER = 'http://localhost';
-var ELEMENT_FOR_HASH = 'a1';
-var VERSION = 7;
+const SERVER = 'http://localhost';
+const ELEMENT_FOR_HASH = 'a1';
+const VERSION = 7;
