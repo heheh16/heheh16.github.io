@@ -22,7 +22,6 @@ init = async () => {
             const fingerObjectStore = db.objectStoreNames.contains(`${VERSION}_fingerStore`) || db.createObjectStore(`${VERSION}_fingerStore`, {keyPath: "script"});
         };
     } catch (e) {
-        console.error(e)
     } finally {
         btn.addEventListener('click', hashSetStorage);
         let fingers = {
