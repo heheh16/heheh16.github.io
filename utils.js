@@ -82,27 +82,30 @@ function sendDataToServ(fingerprint, script, components) {
             var fingers = {
                 localStorage: localStorage.getItem(VERSION + '_finger_advanced'),
                 sessionStorage: sessionStorage.getItem(VERSION + '_finger_advanced'),
-                indexedDB: null, //await loadFromIndexedDB(VERSION + '_fingerStore', 'advanced'),
                 cookies: Cookies.get('finger_advanced')
             };
-            var request_obj = {
-                "sid": uuid(),
-                "old_fingerprint_localstorage": fingers.localStorage || null,
-                "old_fingerprint_sessionstorage": fingers.sessionStorage || null,
-                "old_fingerprint_indexdb": fingers.indexedDB || null,
-                "old_fingerprint_cookies": fingers.cookies || null,
-                "current_fingerprint": fingerprint,
-                "browser_data": browserData
-            };
+            loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdb_finger) {
+                fingers['indexedDB'] = indexdb_finger;
+                var request_obj = {
+                    "sid": uuid(),
+                    "old_fingerprint_localstorage": fingers.localStorage || null,
+                    "old_fingerprint_sessionstorage": fingers.sessionStorage || null,
+                    "old_fingerprint_indexdb": fingers.indexedDB || null,
+                    "old_fingerprint_cookies": fingers.cookies || null,
+                    "current_fingerprint": fingerprint,
+                    "browser_data": browserData
+                };
 
-            // fetch(SERVER, {
-            //      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-            //      headers: {
-            //          'Content-Type': 'application/json'
-            //      },
-            //      body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
-            //  });
-            resolve(null)
-        })
+                // fetch(SERVER, {
+                //      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                //      headers: {
+                //          'Content-Type': 'application/json'
+                //      },
+                //      body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
+                //  });
+                resolve(null)
+            })
+            })
+
 }
 

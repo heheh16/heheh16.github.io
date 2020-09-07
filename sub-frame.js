@@ -1,6 +1,5 @@
 function hashSetStorage() {
     getFinger().then(function (advanced_finger) {
-        console.log('OOOOOOOOOO', advanced_finger)
         hashPlace.innerHTML = advanced_finger
     });
 }
@@ -30,11 +29,13 @@ function init() {
         var fingers = {
             localStorage: localStorage.getItem(VERSION + '_finger_advanced'),
             sessionStorage: sessionStorage.getItem(VERSION + '_finger_advanced'),
-            indexedDB: null //await loadFromIndexedDB(VERSION + '_fingerStore', 'advanced')
         };
-        var hashPlaceData = fingers.indexedDB || fingers.localStorage || fingers.sessionStorage || 'No hash';
-        hashPlace.innerHTML = hashPlaceData;
-        btn.click()
+        loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdbfinger) {
+            fingers['indexedDB'] = indexdbfinger
+            var hashPlaceData = fingers.indexedDB || fingers.localStorage || fingers.sessionStorage || 'No hash';
+            hashPlace.innerHTML = hashPlaceData;
+            btn.click()
+        })
     }
 }
 
