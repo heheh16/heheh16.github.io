@@ -1,3 +1,3 @@
-const SERVER = 'http://localhost';
-const ELEMENT_FOR_HASH = 'a1';
-const VERSION = 7;
+var SERVER = 'http://localhost';
+var ELEMENT_FOR_HASH = 'a1';
+var VERSION = 7;

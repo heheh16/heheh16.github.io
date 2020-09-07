@@ -1,4 +1,4 @@
-(() => {
+(function() {
     !function (e, t, a) {
         "use strict";
         "undefined" != typeof window && "function" == typeof define && define.amd ? define(a) : "undefined" != typeof module && module.exports ? module.exports = a() : t.exports ? t.exports = a() : t.AdvancedFingerprint = a()
@@ -204,45 +204,45 @@
                 return void 0 !== navigator.plugins ? 1 : 0
             },
             getAudioFormats = function (e) {
-                let audio;
-                const audioFormats = ['audio/aac', 'audio/flac', 'audio/mpeg', 'audio/mp4; codecs="mp4a.40.2"',
+                var audio;
+                var audioFormats = ['audio/aac', 'audio/flac', 'audio/mpeg', 'audio/mp4; codecs="mp4a.40.2"',
                     'audio/ogg; codecs="flac"', 'audio/ogg; codecs="vorbis"', 'audio/ogg; codecs="opus"',
                     'audio/wav; codecs="1"', 'audio/webm; codecs="vorbis"', 'audio/webm; codecs="opus"'];
-                let audioValues = {};
+                var audioValues = {};
                 if (!audio) {
                     audio = document.createElement('audio')
                 }
-                audioFormats.map((audioFormat) => {
+                audioFormats.map(function(audioFormat) {
                     audioValues[audioFormat] = audio.canPlayType(audioFormat)
                 });
                 return audioValues;
             },
             getVideoFormats = function (e) {
-                let video;
-                const videoFormats = ['video/mp4; codecs="flac"', 'video/ogg; codecs="theora"', 'video/ogg; codecs="opus"',
+                var video;
+                var videoFormats = ['video/mp4; codecs="flac"', 'video/ogg; codecs="theora"', 'video/ogg; codecs="opus"',
                     'video/webm; codecs="vp9, opus"', 'video/webm; codecs="vp8, vorbis"'];
-                let videoValues = {};
+                var videoValues = {};
                 if (!video) {
                     video = document.createElement('video')
                 }
-                videoFormats.map((videoFormat) => {
+                videoFormats.map(function(videoFormat) {
                     videoValues[videoFormat] = video.canPlayType(videoFormat)
                 });
                 return videoValues;
             },
             getAudioParams = function (e) {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                var AudioContext = window.AudioContext || window.webkitAudioContext;
 
-                const audioCtx = new AudioContext();
+                var audioCtx = new AudioContext();
 
-                const oscillator = audioCtx.createOscillator();
-                const destination = audioCtx.destination;
-                const gainNode = audioCtx.createGain();
+                var oscillator = audioCtx.createOscillator();
+                var destination = audioCtx.destination;
+                var gainNode = audioCtx.createGain();
 
                 oscillator.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
 
-                const audioParams = {
+                var audioParams = {
                     channelCount: oscillator.channelCount,
                     channelCountMode: oscillator.channelCountMode,
                     channelInterpretation: oscillator.channelInterpretation,
@@ -256,13 +256,13 @@
                 return audioParams;
             },
             getMediaDevices = function (e) {
-                let deviceValues = {};
+                var deviceValues = {};
                 navigator.mediaDevices.enumerateDevices()
                     .then(function (devices) {
                         devices.forEach(function (device) {
                             deviceValues[device.kind] = device.deviceId + ':' + device.label
                         });
-                    }).catch((e) => {
+                    }).catch(function(e) {
                 })
                 return deviceValues
             },
@@ -273,9 +273,9 @@
                 return window.screenLeft
             },
             getMimeTypes = function (e) {
-                let mimeTypes = [];
-                for (let i = 0; i < navigator.mimeTypes.length; i++) {
-                    const mt = navigator.mimeTypes[i];
+                var mimeTypes = [];
+                for (var i = 0; i < navigator.mimeTypes.length; i++) {
+                    var mt = navigator.mimeTypes[i];
                     mimeTypes.push([mt.description, mt.type, mt.suffixes].join("~~"));
                 }
                 return mimeTypes;
@@ -298,12 +298,12 @@
                 }
 
                 function cbrt(x) {
-                    const y = Math.pow(Math.abs(x), 1 / 3);
+                    var y = Math.pow(Math.abs(x), 1 / 3);
                     return x < 0 ? -y : y;
                 }
 
                 function cosh(x) {
-                    const y = Math.exp(x);
+                    var y = Math.exp(x);
                     return (y + 1 / y) / 2;
                 }
 
@@ -316,7 +316,7 @@
                 }
 
                 function sinh(x) {
-                    const y = Math.exp(x);
+                    var y = Math.exp(x);
                     return (y - 1 / y) / 2;
                 }
 
@@ -326,7 +326,7 @@
                     } else if (x === -Infinity) {
                         return -1;
                     } else {
-                        const y = Math.exp(2 * x);
+                        var y = Math.exp(2 * x);
                         return (y - 1) / (y + 1);
                     }
                 }
@@ -344,14 +344,14 @@
                 ];
             },
             getPermissions = function (e) {
-                const permissions = ['accelerometer', 'camera ', 'clipboard-read', 'clipboard-write', 'geolocation',
+                var permissions = ['accelerometer', 'camera ', 'clipboard-read', 'clipboard-write', 'geolocation',
                     'background-sync', 'magnetometer', 'microphone', 'midi',
                     'notifications', 'payment-handler', 'persistent-storage'];
-                let permissionsValues = {};
-                permissions.map((permission) => {
+                var permissionsValues = {};
+                permissions.map(function(permission){
                     navigator.permissions.query({name: permission}).then(function (result) {
                         permissionsValues[permission] = result.state
-                    }).catch((e) => {
+                    }).catch(function(e) {
                     })
 
                 });
@@ -949,22 +949,33 @@
 
 })();
 
-getFinger = async () => {
-    const scriptName = 'advanced';
-    const components = await AdvancedFingerprint.getPromise();
-    let murmur;
-    if (Object.keys(components).length > 0) {
-        let data = {};
-        var values = components.map(function (component) {
-            data[component.key] = component.value;
-            return component.value
-        });
-        murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
-        await sendDataToServ(murmur, scriptName, components);
-        await setFingerToStorage(murmur, scriptName);
-        return localStorage.getItem(VERSION +'_finger_' + scriptName)
-    }
-    return 'No hash'
-};
+function getFinger() {
+    return new Promise(
+        function (resolve, reject) {
+            var scriptName = 'advanced';
+            AdvancedFingerprint.getPromise().then(function (components) {
+                var murmur;
+                if (Object.keys(components).length > 0) {
+                    var data = {};
+                    var values = components.map(function (component) {
+                        data[component.key] = component.value;
+                        return component.value
+                    });
+                    var returnedHash = 'No hash';
+                    murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
+                    sendDataToServ(murmur, scriptName, components).then(function () {
+                        setFingerToStorage(murmur, scriptName).then(function () {
+                            if (murmur.length > 0) {
+                                resolve(murmur)
+                            }
+                            else {
+                                resolve('No Hash')
+                            }
+                        })
+                    })
+                }
+            });
+        })
+}
 
 
