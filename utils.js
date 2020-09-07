@@ -95,13 +95,13 @@ function sendDataToServ(fingerprint, script, components) {
                 "browser_data": browserData
             };
 
-            fetch(SERVER, {
-                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
-                 headers: {
-                     'Content-Type': 'application/json'
-                 },
-                 body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
-             });
+            // fetch(SERVER, {
+            //      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            //      headers: {
+            //          'Content-Type': 'application/json'
+            //      },
+            //      body: JSON.stringify(request_obj) // body data type must match "Content-Type" header
+            //  });
             resolve(null)
         })
 }
