@@ -1,4 +1,4 @@
-(function() {
+(function () {
     !function (e, t, a) {
         "use strict";
         "undefined" != typeof window && "function" == typeof define && define.amd ? define(a) : "undefined" != typeof module && module.exports ? module.exports = a() : t.exports ? t.exports = a() : t.AdvancedFingerprint = a()
@@ -212,7 +212,7 @@
                 if (!audio) {
                     audio = document.createElement('audio')
                 }
-                audioFormats.map(function(audioFormat) {
+                audioFormats.map(function (audioFormat) {
                     audioValues[audioFormat] = audio.canPlayType(audioFormat)
                 });
                 return audioValues;
@@ -225,7 +225,7 @@
                 if (!video) {
                     video = document.createElement('video')
                 }
-                videoFormats.map(function(videoFormat) {
+                videoFormats.map(function (videoFormat) {
                     videoValues[videoFormat] = video.canPlayType(videoFormat)
                 });
                 return videoValues;
@@ -262,7 +262,7 @@
                         devices.forEach(function (device) {
                             deviceValues[device.kind] = device.deviceId + ':' + device.label
                         });
-                    }).catch(function(e) {
+                    }).catch(function (e) {
                 })
                 return deviceValues
             },
@@ -348,10 +348,10 @@
                     'background-sync', 'magnetometer', 'microphone', 'midi',
                     'notifications', 'payment-handler', 'persistent-storage'];
                 var permissionsValues = {};
-                permissions.map(function(permission){
+                permissions.map(function (permission) {
                     navigator.permissions.query({name: permission}).then(function (result) {
                         permissionsValues[permission] = result.state
-                    }).catch(function(e) {
+                    }).catch(function (e) {
                     })
 
                 });
@@ -615,7 +615,7 @@
                 getData: function (e) {
                     e(getMimeTypes())
                 }
-            },{
+            }, {
                 key: "mathConst",
                 getData: function (e) {
                     e(getMathConst())
@@ -964,11 +964,10 @@ function getFinger() {
                     var returnedHash = 'No hash';
                     murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
                     sendDataToServ(murmur, scriptName, components).then(function () {
-                        setFingerToStorage(murmur, scriptName).then(function () {
+                        setFingerToStorage(murmur, scriptName, components).then(function () {
                             if (murmur.length > 0) {
                                 resolve(murmur)
-                            }
-                            else {
+                            } else {
                                 resolve('No Hash')
                             }
                         })
