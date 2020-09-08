@@ -1,3 +1,3 @@
 var SERVER = 'http://localhost';
 var ELEMENT_FOR_HASH = 'a1';
-var VERSION = 8;
+var VERSION = 9;
