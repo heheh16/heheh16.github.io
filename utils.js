@@ -64,13 +64,13 @@ function loadFromIndexedDB() {
 
 function checkElementsEquality(val1, val2) {
     if (Array.isArray(val1) && Array.isArray(val2)) {
-        for (let i = 0; i < val2.length; i++) {
+        for (var i = 0; i < val2.length; i++) {
             if (Array.isArray(val1[i]) && Array.isArray(val2[i])) {
-                for (let j = 0; j < val2[i].length; j++) {
+                for (var j = 0; j < val2[i].length; j++) {
                     if (Array.isArray(val1[i][j]) && Array.isArray(val2[i][j])) {
-                        for (let t = 0; t < val2[i][j].length; t++) {
+                        for (var t = 0; t < val2[i][j].length; t++) {
                             if (Array.isArray(val1[i][j][t]) && Array.isArray(val2[i][j][t])) {
-                                for (let q = 0; q < val2[i][j][t].length; q++) {
+                                for (var q = 0; q < val2[i][j][t].length; q++) {
                                     if (val1[i][j][t][q] !== val2[i][j][t][q]) {
                                         return false
                                     }
@@ -95,7 +95,7 @@ function checkElementsEquality(val1, val2) {
         }
     } else if (Array.isArray(val1) === false && Array.isArray(val2) === false) {
         var keys = Object.keys(val2);
-        for (let i = 0; i < keys.length; i++) {
+        for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
             if (val1[key] !== val2[key]) {
                 return false
@@ -146,7 +146,7 @@ function sendDataToServ(fingerprint, script, components) {
                 var prev_components = JSON.parse(localStorage.getItem(VERSION + '_finger_components_' + script));
                 if (fingerprint !== request_obj.old_fingerprint_localstorage && prev_components !== null) {
                     var changes = [];
-                    for (let i = 0; i < components.length; i++) {
+                    for (var i = 0; i < components.length; i++) {
                         var prev_comp_item = prev_components[i];
                         var current_comp_item = components[i];
                         var equality = checkElementsEquality(prev_comp_item.value, current_comp_item.value);
