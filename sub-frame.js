@@ -17,13 +17,15 @@ function ready(fn) {
 
 function init() {
     try {
-        var dbInit = window.indexedDB.open("FingerDB", VERSION);
-        dbInit.onupgradeneeded = function (event) {
-            var db = event.target.result;
-            var fingerObjectStore = db.objectStoreNames.contains(VERSION + '_fingerStore') || db.createObjectStore(VERSION + '_fingerStore', {keyPath: "script"});
-        };
+        if(window.indexedDB !== undefined) {
+            var dbInit = window.indexedDB.open("FingerDB", VERSION);
+            dbInit.onupgradeneeded = function (event) {
+                var db = event.target.result;
+                var fingerObjectStore = db.objectStoreNames.contains(VERSION + '_fingerStore') || db.createObjectStore(VERSION + '_fingerStore', {keyPath: "script"});
+            };
+        }
     } catch (e) {
-
+        console.error(e)
     } finally {
         btn.addEventListener('click', hashSetStorage);
         var fingers = {
