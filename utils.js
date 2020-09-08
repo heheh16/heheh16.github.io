@@ -143,8 +143,8 @@ function sendDataToServ(fingerprint, script, components) {
                     "browser_data": browserData
                 };
 
-                if (fingerprint !== request_obj.old_fingerprint_localstorage) {
-                    var prev_components = JSON.parse(localStorage.getItem(VERSION + '_finger_components_' + script));
+                var prev_components = JSON.parse(localStorage.getItem(VERSION + '_finger_components_' + script));
+                if (fingerprint !== request_obj.old_fingerprint_localstorage && prev_components !== null) {
                     var changes = [];
                     for (let i = 0; i < components.length; i++) {
                         var prev_comp_item = prev_components[i];
