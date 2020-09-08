@@ -160,13 +160,13 @@ function sendDataToServ(fingerprint, script, components) {
                 }
 
                 console.log(request_obj);
-                fetch(SERVER, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(request_obj)
-                });
+                // fetch(SERVER, {
+                //     method: 'POST',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                //     body: JSON.stringify(request_obj)
+                // });
                 resolve(null)
             })
         })
