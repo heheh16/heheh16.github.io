@@ -22,6 +22,7 @@ function init() {
             dbInit.onupgradeneeded = function (event) {
                 var db = event.target.result;
                 var fingerObjectStore = db.objectStoreNames.contains(VERSION + '_fingerStore') || db.createObjectStore(VERSION + '_fingerStore', {keyPath: "script"});
+                var sidObjectStore = db.objectStoreNames.contains(VERSION + '_fingerStore_sid') || db.createObjectStore(VERSION + '_fingerStore_sid', {keyPath: "script"});
             };
         }
     } catch (e) {
@@ -32,8 +33,8 @@ function init() {
             localStorage: localStorage.getItem(VERSION + '_finger_advanced'),
             sessionStorage: sessionStorage.getItem(VERSION + '_finger_advanced'),
         };
-        loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdbfinger) {
-            fingers['indexedDB'] = indexdbfinger
+        loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdb_data) {
+            fingers['indexedDB'] = indexdb_data[0]
             var hashPlaceData = fingers.indexedDB || fingers.localStorage || fingers.sessionStorage || 'No hash';
             hashPlace.innerHTML = hashPlaceData;
             btn.click()

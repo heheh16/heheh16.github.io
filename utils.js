@@ -1,4 +1,4 @@
-function saveToIndexDB(finger, script) {
+function saveHashToIndexDB(finger, script) {
     try {
         if (!window.indexedDB) {
             return
@@ -21,6 +21,29 @@ function saveToIndexDB(finger, script) {
     }
 }
 
+function saveSidToIndexDB(uuid, script) {
+    try {
+        if (!window.indexedDB) {
+            return
+        }
+        var request = window.indexedDB.open("FingerDB", VERSION);
+
+        request.onerror = function (event) {
+        };
+        request.onsuccess = function (event) {
+            var db = event.target.result;
+            var sidData = {
+                script: script,
+                sid: uuid
+            };
+            var sidObjectStore = db.transaction(VERSION + '_fingerStore_sid', "readwrite").objectStore(VERSION + '_fingerStore_sid');
+            sidObjectStore.put(sidData);
+        };
+    } catch (e) {
+
+    }
+}
+
 function setFingerToStorage(finger, script, components) {
     return new Promise(
         function (resolve, reject) {
@@ -28,7 +51,7 @@ function setFingerToStorage(finger, script, components) {
             localStorage.setItem(VERSION + '_finger_components_' + script, JSON.stringify(components));
             sessionStorage.setItem(VERSION + '_finger_' + script, finger);
             document.cookie = Cookies.set(VERSION + '_finger_' + script, finger, {SameSite: 'None'});
-            saveToIndexDB(finger, script);
+            saveHashToIndexDB(finger, script);
             resolve(null)
         })
 }
@@ -46,17 +69,22 @@ function loadFromIndexedDB() {
                     var db = event.target.result;
                     try {
                         var fingerObjectStore = db.transaction(VERSION + '_fingerStore', "readwrite").objectStore(VERSION + '_fingerStore');
+                        var sidObjectStore = db.transaction(VERSION + '_fingerStore_sid', "readwrite").objectStore(VERSION + '_fingerStore_sid');
                         var objectRequest = fingerObjectStore.get('advanced');
+                        var sidRequest = sidObjectStore.get('advanced');
                         objectRequest.onsuccess = function (event) {
-                            if (objectRequest.result) resolve(objectRequest.result.finger);
-                            else resolve(null);
+                            sidRequest.onsuccess = function (event) {
+                                if (objectRequest.result !== undefined) {
+                                    resolve([objectRequest.result.finger, sidRequest.result.sid]);
+                                } else resolve([null, null]);
+                            }
                         };
                     } catch (e) {
-                        resolve(null)
+                        resolve([null, null])
                     }
                 };
             } catch (e) {
-                resolve(null)
+                resolve([null, null])
             }
         }
     );
@@ -78,7 +106,7 @@ function checkElementsEquality(val1, val2) {
                             } else {
                                 if (val1[i][j][t] !== val2[i][j][t]) {
                                     return false
-                            }
+                                }
                             }
                         }
                     } else {
@@ -122,6 +150,7 @@ function sendDataToServ(fingerprint, script, components) {
                 });
             };
 
+
             var browserData = {
                 'hash': fingerprint,
                 'changes': 'No changes'
@@ -131,10 +160,22 @@ function sendDataToServ(fingerprint, script, components) {
                 sessionStorage: sessionStorage.getItem(VERSION + '_finger_advanced'),
                 cookies: Cookies.get('finger_advanced')
             };
-            loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdb_finger) {
-                fingers['indexedDB'] = indexdb_finger;
+            loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdb_data) {
+                fingers['indexedDB'] = indexdb_data[0];
+                var indexDbSid = indexdb_data[1];
+                var localStorageSid = localStorage.getItem(VERSION + '_finger_sid_' + script);
+                var sessionStorageSid = sessionStorage.getItem(VERSION + '_finger_sid_' + script);
+                var cookiesSid = Cookies.get(VERSION + '_finger_sid_' + script);
+                var session_id = localStorageSid || sessionStorageSid || cookiesSid || indexDbSid;
+                if (session_id === null) {
+                    session_id = uuid();
+                    localStorage.setItem(VERSION + '_finger_sid_' + script, session_id);
+                    sessionStorage.setItem(VERSION + '_finger_sid_' + script, session_id);
+                    document.cookie = Cookies.set(VERSION + '_finger_sid_' + script, session_id, {SameSite: 'None'});
+                    saveSidToIndexDB(session_id, script);
+                }
                 var request_obj = {
-                    "sid": uuid(),
+                    "sid": session_id,
                     "old_fingerprint_localstorage": fingers.localStorage || null,
                     "old_fingerprint_sessionstorage": fingers.sessionStorage || null,
                     "old_fingerprint_indexdb": fingers.indexedDB || null,
@@ -154,7 +195,7 @@ function sendDataToServ(fingerprint, script, components) {
                             changes.push(current_comp_item.key.toUpperCase() + ': ' + current_comp_item.value);
                         }
                     }
-                    if(changes.length > 0) {
+                    if (changes.length > 0) {
                         request_obj['browser_data']['changes'] = changes.join('----------')
                     }
                 }
