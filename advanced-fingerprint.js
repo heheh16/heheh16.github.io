@@ -231,9 +231,9 @@
                 return videoValues;
             },
             getAudioParams = function (e) {
-                var AudioContext = window.AudioContext || window.webkitAudioContext;
+                var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
 
-                var audioCtx = new AudioContext();
+                var audioCtx = new n(1, 44100, 44100);
 
                 var oscillator = audioCtx.createOscillator();
                 var destination = audioCtx.destination;
@@ -908,8 +908,7 @@
                         var t = e.audio;
                         var check_os = navigator.userAgent.match(/OS 11.+Version\/11.+Safari/) || navigator.userAgent.match(/OS 13.+Version\/13.+Safari/)
                         if (t.excludeIOS11 && check_os) return a(e.EXCLUDED);
-                        const AudioContext = window.AudioContext || window.webkitAudioContext;
-                        var n =  new AudioContext();
+                        var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
                         if (null == n) return a(e.NOT_AVAILABLE);
                         var r = new n(1, 44100, 44100),
                             i = r.createOscillator();
