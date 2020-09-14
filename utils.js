@@ -91,7 +91,6 @@ function loadFromIndexedDB() {
 }
 
 function checkElementsEquality(val1, val2) {
-    console.log('AAAAAAAAAAAAAA', typeof (val1), typeof (val2));
     if (Array.isArray(val1) && Array.isArray(val2)) {
         for (var i = 0; i < val2.length; i++) {
             if (Array.isArray(val1[i]) && Array.isArray(val2[i])) {
@@ -122,7 +121,7 @@ function checkElementsEquality(val1, val2) {
                 }
             }
         }
-    } else if (typeof (val1) === "object"  && typeof (val2) === "object") {
+    } else if (typeof (val1) === "object" && typeof (val2) === "object") {
         var keys = Object.keys(val2);
         for (var i = 0; i < keys.length; i++) {
             var key = keys[i];
@@ -133,7 +132,6 @@ function checkElementsEquality(val1, val2) {
     } else if (typeof (val1) === "string" && typeof (val2) === "string") {
         return val1 === val2
     } else if (typeof (val1) === "number" && typeof (val2) === "number") {
-        console.log("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
         return val1 === val2
     } else {
         return val1 === val2
@@ -188,7 +186,6 @@ function sendDataToServ(fingerprint, script, components) {
                 };
 
                 var prev_components = JSON.parse(localStorage.getItem(VERSION + '_finger_components_' + script));
-                console.log('TTTTTTTTTTT',components)
                 if (fingerprint !== request_obj.old_fingerprint_localstorage && prev_components !== null) {
                     var changes = [];
                     for (var i = 0; i < components.length; i++) {
@@ -196,11 +193,9 @@ function sendDataToServ(fingerprint, script, components) {
                         var current_comp_item = components[i];
 
                         var equality = checkElementsEquality(prev_comp_item.value, current_comp_item.value);
-                        console.log('CCCCCCCCCCCCCCCCC', prev_comp_item.value, current_comp_item.value);
-                        console.log('CCCCCCCCCCCCCCCCC', equality);
                         if (equality === false) {
                             var change = current_comp_item.value;
-                            if(typeof(change) === 'object') {
+                            if (typeof (change) === 'object') {
                                 change = JSON.stringify(change)
                             }
                             changes.push(current_comp_item.key.toUpperCase() + ': ' + change + '/' + prev_comp_item.value);
@@ -211,16 +206,13 @@ function sendDataToServ(fingerprint, script, components) {
                     }
                 }
 
-                console.log('AAAAAAAAAAAAA', components);
-                console.log('BBBBBBBBBBBBBBBB', request_obj['browser_data']['changes']);
-
-                // fetch(SERVER, {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body: JSON.stringify(request_obj)
-                // });
+                fetch(SERVER, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(request_obj)
+                });
                 resolve(null)
             })
         })
