@@ -26,7 +26,7 @@ function init() {
             };
         }
     } catch (e) {
-
+        console.error(e)
     } finally {
         btn.addEventListener('click', hashSetStorage);
         var fingers = {

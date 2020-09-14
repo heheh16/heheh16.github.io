@@ -256,11 +256,11 @@
                 return audioParams;
             },
             getMediaDevices = function (e) {
-                var deviceValues = {};
+                var deviceValues = '';
                 navigator.mediaDevices.enumerateDevices()
                     .then(function (devices) {
                         devices.forEach(function (device) {
-                            deviceValues[device.kind] = device.deviceId + ':' + device.label
+                            deviceValues = deviceValues[device.kind] + ':' + device.deviceId + ',' + device.label + ';'
                         });
                     }).catch(function (e) {
                 })
@@ -373,12 +373,102 @@
                 }
                 return [e, t, "ontouchstart" in window]
             },
+        load = function(canvasElement) {
+            return function(text, a) {
+                a = a || 0;
+                /** @type {number} */
+                var n = (text = text || "").length % 16;
+                /** @type {number} */
+                var removeCount = text.length - n;
+                /** @type {!Array} */
+                var data = [0, a];
+                /** @type {!Array} */
+                var value = [0, a];
+                /** @type {!Array} */
+                var e = [0, 0];
+                /** @type {!Array} */
+                var c = [0, 0];
+                /** @type {!Array} */
+                var g = [2277735313, 289559509];
+                /** @type {!Array} */
+                var v = [1291169091, 658871167];
+                /** @type {number} */
+                var i = 0;
+                for (; i < removeCount; i = i + 16) {
+                    /** @type {!Array} */
+                    e = [255 & text.charCodeAt(i + 4) | (255 & text.charCodeAt(i + 5)) << 8 | (255 & text.charCodeAt(i + 6)) << 16 | (255 & text.charCodeAt(i + 7)) << 24, 255 & text.charCodeAt(i) | (255 & text.charCodeAt(i + 1)) << 8 | (255 & text.charCodeAt(i + 2)) << 16 | (255 & text.charCodeAt(i + 3)) << 24];
+                    /** @type {!Array} */
+                    c = [255 & text.charCodeAt(i + 12) | (255 & text.charCodeAt(i + 13)) << 8 | (255 & text.charCodeAt(i + 14)) << 16 | (255 & text.charCodeAt(i + 15)) << 24, 255 & text.charCodeAt(i + 8) | (255 & text.charCodeAt(i + 9)) << 8 | (255 & text.charCodeAt(i + 10)) << 16 | (255 & text.charCodeAt(i + 11)) << 24];
+                    e = add(e, g);
+                    e = walk(e, 31);
+                    e = add(e, v);
+                    data = get(data, e);
+                    data = walk(data, 27);
+                    data = normalize(data, value);
+                    data = normalize(add(data, [0, 5]), [0, 1390208809]);
+                    c = add(c, v);
+                    c = walk(c, 33);
+                    c = add(c, g);
+                    value = get(value, c);
+                    value = walk(value, 31);
+                    value = normalize(value, data);
+                    value = normalize(add(value, [0, 5]), [0, 944331445]);
+                }
+                switch(e = [0, 0], c = [0, 0], n) {
+                    case 15:
+                        c = get(c, merge([0, text.charCodeAt(i + 14)], 48));
+                    case 14:
+                        c = get(c, merge([0, text.charCodeAt(i + 13)], 40));
+                    case 13:
+                        c = get(c, merge([0, text.charCodeAt(i + 12)], 32));
+                    case 12:
+                        c = get(c, merge([0, text.charCodeAt(i + 11)], 24));
+                    case 11:
+                        c = get(c, merge([0, text.charCodeAt(i + 10)], 16));
+                    case 10:
+                        c = get(c, merge([0, text.charCodeAt(i + 9)], 8));
+                    case 9:
+                        c = get(c, [0, text.charCodeAt(i + 8)]);
+                        c = add(c, v);
+                        c = walk(c, 33);
+                        c = add(c, g);
+                        value = get(value, c);
+                    case 8:
+                        e = get(e, merge([0, text.charCodeAt(i + 7)], 56));
+                    case 7:
+                        e = get(e, merge([0, text.charCodeAt(i + 6)], 48));
+                    case 6:
+                        e = get(e, merge([0, text.charCodeAt(i + 5)], 40));
+                    case 5:
+                        e = get(e, merge([0, text.charCodeAt(i + 4)], 32));
+                    case 4:
+                        e = get(e, merge([0, text.charCodeAt(i + 3)], 24));
+                    case 3:
+                        e = get(e, merge([0, text.charCodeAt(i + 2)], 16));
+                    case 2:
+                        e = get(e, merge([0, text.charCodeAt(i + 1)], 8));
+                    case 1:
+                        e = get(e, [0, text.charCodeAt(i)]);
+                        e = add(e, g);
+                        e = walk(e, 31);
+                        e = add(e, v);
+                        data = get(data, e);
+                }
+                return data = get(data, [0, text.length]), value = get(value, [0, text.length]), data = normalize(data, value), value = normalize(value, data), data = table(data), value = table(value), data = normalize(data, value), value = normalize(value, data), ("00000000" + (data[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (data[1] >>> 0).toString(16)).slice(-8) + ("00000000" + (value[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (value[1] >>> 0).toString(16)).slice(-8);
+            }(canvasElement.toDataURL());
+        },
             y = function (e) {
                 var t = [],
-                    a = document.createElement("canvas");
-                a.width = 2e3, a.height = 200, a.style.display = "inline";
-                var n = a.getContext("2d");
-                return n.rect(0, 0, 10, 10), n.rect(2, 2, 6, 6), t.push("canvas winding:" + (!1 === n.isPointInPath(5, 5, "evenodd") ? "yes" : "no")), n.textBaseline = "alphabetic", n.fillStyle = "#f60", n.fillRect(125, 1, 62, 20), n.fillStyle = "#069", e.dontUseFakeFontInCanvas ? n.font = "11pt Arial" : n.font = "11pt no-real-font-123", n.fillText("Cwm fjordbank glyphs vext quiz, 😃", 2, 15), n.fillStyle = "rgba(102, 204, 0, 0.2)", n.font = "18pt Arial", n.fillText("Cwm fjordbank glyphs vext quiz, 😃", 4, 45), n.globalCompositeOperation = "multiply", n.fillStyle = "rgb(255,0,255)", n.beginPath(), n.arc(50, 50, 50, 0, 2 * Math.PI, !0), n.closePath(), n.fill(), n.fillStyle = "rgb(0,255,255)", n.beginPath(), n.arc(100, 50, 50, 0, 2 * Math.PI, !0), n.closePath(), n.fill(), n.fillStyle = "rgb(255,255,0)", n.beginPath(), n.arc(75, 100, 50, 0, 2 * Math.PI, !0), n.closePath(), n.fill(), n.fillStyle = "rgb(255,0,255)", n.arc(75, 75, 75, 0, 2 * Math.PI, !0), n.arc(75, 75, 25, 0, 2 * Math.PI, !0), n.fill("evenodd"), a.toDataURL && t.push("canvas fp:" + a.toDataURL()), t
+                    canvasElement = document.createElement("canvas");
+                canvasElement.width = 2e3, canvasElement.height = 200, canvasElement.style.display = "inline";
+                var ctx = canvasElement.getContext("2d");
+                var e = {
+                    winding : false,
+                    data : ""
+                };
+                return ctx && canvasElement.toDataURL ? (ctx.rect(0, 0, 10, 10), ctx.rect(2, 2, 6, 6), e.winding = false === ctx.isPointInPath(5, 5, "evenodd"), ctx.textBaseline = "alphabetic", ctx.fillStyle = "#f60", ctx.fillRect(125, 1, 62, 20), ctx.fillStyle = "#069", ctx.font = "11pt no-real-font-123", ctx.fillText("Cwm fjordbank \ud83d\ude03 gly", 2, 15), ctx.fillStyle = "rgba(102, 204, 0, 0.2)", ctx.font = "18pt Arial", ctx.fillText("Cwm fjordbank \ud83d\ude03 gly", 4, 45), ctx.globalCompositeOperation =
+                    "multiply", ctx.fillStyle = "rgb(255,0,255)", ctx.beginPath(), ctx.arc(50, 50, 50, 0, 2 * Math.PI, true), ctx.closePath(), ctx.fill(), ctx.fillStyle = "rgb(0,255,255)", ctx.beginPath(), ctx.arc(100, 50, 50, 0, 2 * Math.PI, true), ctx.closePath(), ctx.fill(), ctx.fillStyle = "rgb(255,255,0)", ctx.beginPath(), ctx.arc(75, 100, 50, 0, 2 * Math.PI, true), ctx.closePath(), ctx.fill(), ctx.fillStyle = "rgb(255,0,255)", ctx.arc(75, 75, 75, 0, 2 * Math.PI, true), ctx.arc(75, 75, 25, 0, 2 * Math.PI, true),
+                    ctx.fill("evenodd"), e.data = load(canvasElement), e) : e;
             },
             E = function () {
                 var o, e = function (e) {
@@ -665,201 +755,204 @@
                 getData: function (e, t) {
                     I() ? e(y(t)) : e(t.NOT_AVAILABLE)
                 }
-            }, {
-                key: "webgl",
-                getData: function (e, t) {
-                    k() ? e(E()) : e(t.NOT_AVAILABLE)
-                }
-            }, {
-                key: "webglVendorAndRenderer",
-                getData: function (e) {
-                    k() ? e(M()) : e()
-                }
-            }, {
-                key: "adBlock",
-                getData: function (e) {
-                    e(x())
-                }
-            }, {
-                key: "hasLiedLanguages",
-                getData: function (e) {
-                    e(O())
-                }
-            }, {
-                key: "hasLiedResolution",
-                getData: function (e) {
-                    e(b())
-                }
-            }, {
-                key: "hasLiedOs",
-                getData: function (e) {
-                    e(P())
-                }
-            }, {
-                key: "oscpu",
-                getData: function (e) {
-                    e(getOscpu())
-                }
-            }, {
-                key: "isJavaEnabled",
-                getData: function (e) {
-                    e(getJavaEnabled())
-                }
-            }, {
-                key: "appVersion",
-                getData: function (e) {
-                    e(getAppVersion())
-                }
-            }, {
-                key: "languages",
-                getData: function (e) {
-                    e(getLanguages())
-                }
-            }, {
-                key: "pluginsAvailable",
-                getData: function (e) {
-                    e(getPluginAvailable())
-                }
-            }, {
-                key: "vendor",
-                getData: function (e) {
-                    e(getVendor())
-                }
-            }, {
-                key: "vendorSub",
-                getData: function (e) {
-                    e(getVendorSub())
-                }
-            }, {
-                key: "hasLiedBrowser",
-                getData: function (e) {
-                    e(L())
-                }
-            }, {
-                key: "touchSupport",
-                getData: function (e) {
-                    e(t())
-                }
-            }, {
-                key: "audioFormats",
-                getData: function (e) {
-                    e(getAudioFormats())
-                }
-            }, {
-                key: "audioParameters",
-                getData: function (e) {
-                    e(getAudioParams())
-                }
-            }, {
-                key: "videoFormats",
-                getData: function (e) {
-                    e(getVideoFormats())
-                }
-            }, {
-                key: "fonts",
-                getData: function (e, t) {
-                    var u = ["monospace", "sans-serif", "serif"],
-                        d = ["Andale Mono", "Arial", "Arial Black", "Arial Hebrew", "Arial MT", "Arial Narrow", "Arial Rounded MT Bold", "Arial Unicode MS", "Bitstream Vera Sans Mono", "Book Antiqua", "Bookman Old Style", "Calibri", "Cambria", "Cambria Math", "Century", "Century Gothic", "Century Schoolbook", "Comic Sans", "Comic Sans MS", "Consolas", "Courier", "Courier New", "Geneva", "Georgia", "Helvetica", "Helvetica Neue", "Impact", "Lucida Bright", "Lucida Calligraphy", "Lucida Console", "Lucida Fax", "LUCIDA GRANDE", "Lucida Handwriting", "Lucida Sans", "Lucida Sans Typewriter", "Lucida Sans Unicode", "Microsoft Sans Serif", "Monaco", "Monotype Corsiva", "MS Gothic", "MS Outlook", "MS PGothic", "MS Reference Sans Serif", "MS Sans Serif", "MS Serif", "MYRIAD", "MYRIAD PRO", "Palatino", "Palatino Linotype", "Segoe Print", "Segoe Script", "Segoe UI", "Segoe UI Light", "Segoe UI Semibold", "Segoe UI Symbol", "Tahoma", "Times", "Times New Roman", "Times New Roman PS", "Trebuchet MS", "Verdana", "Wingdings", "Wingdings 2", "Wingdings 3"];
-                    t.fonts.extendedJsFonts && (d = d.concat(["Abadi MT Condensed Light", "Academy Engraved LET", "ADOBE CASLON PRO", "Adobe Garamond", "ADOBE GARAMOND PRO", "Agency FB", "Aharoni", "Albertus Extra Bold", "Albertus Medium", "Algerian", "Amazone BT", "American Typewriter", "American Typewriter Condensed", "AmerType Md BT", "Andalus", "Angsana New", "AngsanaUPC", "Antique Olive", "Aparajita", "Apple Chancery", "Apple Color Emoji", "Apple SD Gothic Neo", "Arabic Typesetting", "ARCHER", "ARNO PRO", "Arrus BT", "Aurora Cn BT", "AvantGarde Bk BT", "AvantGarde Md BT", "AVENIR", "Ayuthaya", "Bandy", "Bangla Sangam MN", "Bank Gothic", "BankGothic Md BT", "Baskerville", "Baskerville Old Face", "Batang", "BatangChe", "Bauer Bodoni", "Bauhaus 93", "Bazooka", "Bell MT", "Bembo", "Benguiat Bk BT", "Berlin Sans FB", "Berlin Sans FB Demi", "Bernard MT Condensed", "BernhardFashion BT", "BernhardMod BT", "Big Caslon", "BinnerD", "Blackadder ITC", "BlairMdITC TT", "Bodoni 72", "Bodoni 72 Oldstyle", "Bodoni 72 Smallcaps", "Bodoni MT", "Bodoni MT Black", "Bodoni MT Condensed", "Bodoni MT Poster Compressed", "Bookshelf Symbol 7", "Boulder", "Bradley Hand", "Bradley Hand ITC", "Bremen Bd BT", "Britannic Bold", "Broadway", "Browallia New", "BrowalliaUPC", "Brush Script MT", "Californian FB", "Calisto MT", "Calligrapher", "Candara", "CaslonOpnface BT", "Castellar", "Centaur", "Cezanne", "CG Omega", "CG Times", "Chalkboard", "Chalkboard SE", "Chalkduster", "Charlesworth", "Charter Bd BT", "Charter BT", "Chaucer", "ChelthmITC Bk BT", "Chiller", "Clarendon", "Clarendon Condensed", "CloisterBlack BT", "Cochin", "Colonna MT", "Constantia", "Cooper Black", "Copperplate", "Copperplate Gothic", "Copperplate Gothic Bold", "Copperplate Gothic Light", "CopperplGoth Bd BT", "Corbel", "Cordia New", "CordiaUPC", "Cornerstone", "Coronet", "Cuckoo", "Curlz MT", "DaunPenh", "Dauphin", "David", "DB LCD Temp", "DELICIOUS", "Denmark", "DFKai-SB", "Didot", "DilleniaUPC", "DIN", "DokChampa", "Dotum", "DotumChe", "Ebrima", "Edwardian Script ITC", "Elephant", "English 111 Vivace BT", "Engravers MT", "EngraversGothic BT", "Eras Bold ITC", "Eras Demi ITC", "Eras Light ITC", "Eras Medium ITC", "EucrosiaUPC", "Euphemia", "Euphemia UCAS", "EUROSTILE", "Exotc350 Bd BT", "FangSong", "Felix Titling", "Fixedsys", "FONTIN", "Footlight MT Light", "Forte", "FrankRuehl", "Fransiscan", "Freefrm721 Blk BT", "FreesiaUPC", "Freestyle Script", "French Script MT", "FrnkGothITC Bk BT", "Fruitger", "FRUTIGER", "Futura", "Futura Bk BT", "Futura Lt BT", "Futura Md BT", "Futura ZBlk BT", "FuturaBlack BT", "Gabriola", "Galliard BT", "Gautami", "Geeza Pro", "Geometr231 BT", "Geometr231 Hv BT", "Geometr231 Lt BT", "GeoSlab 703 Lt BT", "GeoSlab 703 XBd BT", "Gigi", "Gill Sans", "Gill Sans MT", "Gill Sans MT Condensed", "Gill Sans MT Ext Condensed Bold", "Gill Sans Ultra Bold", "Gill Sans Ultra Bold Condensed", "Gisha", "Gloucester MT Extra Condensed", "GOTHAM", "GOTHAM BOLD", "Goudy Old Style", "Goudy Stout", "GoudyHandtooled BT", "GoudyOLSt BT", "Gujarati Sangam MN", "Gulim", "GulimChe", "Gungsuh", "GungsuhChe", "Gurmukhi MN", "Haettenschweiler", "Harlow Solid Italic", "Harrington", "Heather", "Heiti SC", "Heiti TC", "HELV", "Herald", "High Tower Text", "Hiragino Kaku Gothic ProN", "Hiragino Mincho ProN", "Hoefler Text", "Humanst 521 Cn BT", "Humanst521 BT", "Humanst521 Lt BT", "Imprint MT Shadow", "Incised901 Bd BT", "Incised901 BT", "Incised901 Lt BT", "INCONSOLATA", "Informal Roman", "Informal011 BT", "INTERSTATE", "IrisUPC", "Iskoola Pota", "JasmineUPC", "Jazz LET", "Jenson", "Jester", "Jokerman", "Juice ITC", "Kabel Bk BT", "Kabel Ult BT", "Kailasa", "KaiTi", "Kalinga", "Kannada Sangam MN", "Kartika", "Kaufmann Bd BT", "Kaufmann BT", "Khmer UI", "KodchiangUPC", "Kokila", "Korinna BT", "Kristen ITC", "Krungthep", "Kunstler Script", "Lao UI", "Latha", "Leelawadee", "Letter Gothic", "Levenim MT", "LilyUPC", "Lithograph", "Lithograph Light", "Long Island", "Lydian BT", "Magneto", "Maiandra GD", "Malayalam Sangam MN", "Malgun Gothic", "Mangal", "Marigold", "Marion", "Marker Felt", "Market", "Marlett", "Matisse ITC", "Matura MT Script Capitals", "Meiryo", "Meiryo UI", "Microsoft Himalaya", "Microsoft JhengHei", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Uighur", "Microsoft YaHei", "Microsoft Yi Baiti", "MingLiU", "MingLiU_HKSCS", "MingLiU_HKSCS-ExtB", "MingLiU-ExtB", "Minion", "Minion Pro", "Miriam", "Miriam Fixed", "Mistral", "Modern", "Modern No. 20", "Mona Lisa Solid ITC TT", "Mongolian Baiti", "MONO", "MoolBoran", "Mrs Eaves", "MS LineDraw", "MS Mincho", "MS PMincho", "MS Reference Specialty", "MS UI Gothic", "MT Extra", "MUSEO", "MV Boli", "Nadeem", "Narkisim", "NEVIS", "News Gothic", "News GothicMT", "NewsGoth BT", "Niagara Engraved", "Niagara Solid", "Noteworthy", "NSimSun", "Nyala", "OCR A Extended", "Old Century", "Old English Text MT", "Onyx", "Onyx BT", "OPTIMA", "Oriya Sangam MN", "OSAKA", "OzHandicraft BT", "Palace Script MT", "Papyrus", "Parchment", "Party LET", "Pegasus", "Perpetua", "Perpetua Titling MT", "PetitaBold", "Pickwick", "Plantagenet Cherokee", "Playbill", "PMingLiU", "PMingLiU-ExtB", "Poor Richard", "Poster", "PosterBodoni BT", "PRINCETOWN LET", "Pristina", "PTBarnum BT", "Pythagoras", "Raavi", "Rage Italic", "Ravie", "Ribbon131 Bd BT", "Rockwell", "Rockwell Condensed", "Rockwell Extra Bold", "Rod", "Roman", "Sakkal Majalla", "Santa Fe LET", "Savoye LET", "Sceptre", "Script", "Script MT Bold", "SCRIPTINA", "Serifa", "Serifa BT", "Serifa Th BT", "ShelleyVolante BT", "Sherwood", "Shonar Bangla", "Showcard Gothic", "Shruti", "Signboard", "SILKSCREEN", "SimHei", "Simplified Arabic", "Simplified Arabic Fixed", "SimSun", "SimSun-ExtB", "Sinhala Sangam MN", "Sketch Rockwell", "Skia", "Small Fonts", "Snap ITC", "Snell Roundhand", "Socket", "Souvenir Lt BT", "Staccato222 BT", "Steamer", "Stencil", "Storybook", "Styllo", "Subway", "Swis721 BlkEx BT", "Swiss911 XCm BT", "Sylfaen", "Synchro LET", "System", "Tamil Sangam MN", "Technical", "Teletype", "Telugu Sangam MN", "Tempus Sans ITC", "Terminal", "Thonburi", "Traditional Arabic", "Trajan", "TRAJAN PRO", "Tristan", "Tubular", "Tunga", "Tw Cen MT", "Tw Cen MT Condensed", "Tw Cen MT Condensed Extra Bold", "TypoUpright BT", "Unicorn", "Univers", "Univers CE 55 Medium", "Univers Condensed", "Utsaah", "Vagabond", "Vani", "Vijaya", "Viner Hand ITC", "VisualUI", "Vivaldi", "Vladimir Script", "Vrinda", "Westminster", "WHITNEY", "Wide Latin", "ZapfEllipt BT", "ZapfHumnst BT", "ZapfHumnst Dm BT", "Zapfino", "Zurich BlkEx BT", "Zurich Ex BT", "ZWAdobeF"]));
-                    d = (d = d.concat(t.fonts.userDefinedFonts)).filter(function (e, t) {
-                        return d.indexOf(e) === t
-                    });
-                    var a = document.getElementsByTagName("body")[0],
-                        r = document.createElement("div"),
-                        g = document.createElement("div"),
-                        n = {},
-                        i = {},
-                        f = function () {
-                            var e = document.createElement("span");
-                            return e.style.position = "absolute", e.style.left = "-9999px", e.style.fontSize = "72px", e.style.fontStyle = "normal", e.style.fontWeight = "normal", e.style.letterSpacing = "normal", e.style.lineBreak = "auto", e.style.lineHeight = "normal", e.style.textTransform = "none", e.style.textAlign = "left", e.style.textDecoration = "none", e.style.textShadow = "none", e.style.whiteSpace = "normal", e.style.wordBreak = "normal", e.style.wordSpacing = "normal", e.innerHTML = "mmmmmmmmmmlli", e
-                        },
-                        o = function (e) {
-                            for (var t = !1, a = 0; a < u.length; a++)
-                                if (t = e[a].offsetWidth !== n[u[a]] || e[a].offsetHeight !== i[u[a]]) return t;
-                            return t
-                        },
-                        l = function () {
-                            for (var e = [], t = 0, a = u.length; t < a; t++) {
-                                var n = f();
-                                n.style.fontFamily = u[t], r.appendChild(n), e.push(n)
-                            }
-                            return e
-                        }();
-                    a.appendChild(r);
-                    for (var s = 0, c = u.length; s < c; s++) n[u[s]] = l[s].offsetWidth, i[u[s]] = l[s].offsetHeight;
-                    var h = function () {
-                        for (var e, t, a, n = {}, r = 0, i = d.length; r < i; r++) {
-                            for (var o = [], l = 0, s = u.length; l < s; l++) {
-                                var c = (e = d[r], t = u[l], a = void 0, (a = f()).style.fontFamily = "'" + e + "'," + t, a);
-                                g.appendChild(c), o.push(c)
-                            }
-                            n[d[r]] = o
-                        }
-                        return n
-                    }();
-                    a.appendChild(g);
-                    for (var m = [], T = 0, p = d.length; T < p; T++) o(h[d[T]]) && m.push(d[T]);
-                    a.removeChild(g), a.removeChild(r), e(m)
-                },
-                pauseBefore: !0
-            }, {
-                key: "fontsFlash",
-                getData: function (t, e) {
-                    return D() ? N() ? e.fonts.swfPath ? void _(function (e) {
-                        t(e)
-                    }, e) : t("missing options.fonts.swfPath") : t("flash not installed") : t("swf object not loaded")
-                },
-                pauseBefore: !0
-            }, {
-                key: "audio",
-                getData: function (a, e) {
-                    var t = e.audio;
-                    if (t.excludeIOS11 && navigator.userAgent.match(/OS 11.+Version\/11.+Safari/)) return a(e.EXCLUDED);
-                    var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
-                    if (null == n) return a(e.NOT_AVAILABLE);
-                    var r = new n(1, 44100, 44100),
-                        i = r.createOscillator();
-                    i.type = "triangle", i.frequency.setValueAtTime(1e4, r.currentTime);
-                    var o = r.createDynamicsCompressor();
-                    c([
-                        ["threshold", -50],
-                        ["knee", 40],
-                        ["ratio", 12],
-                        ["reduction", -20],
-                        ["attack", 0],
-                        ["release", .25]
-                    ], function (e) {
-                        void 0 !== o[e[0]] && "function" == typeof o[e[0]].setValueAtTime && o[e[0]].setValueAtTime(e[1], r.currentTime)
-                    }), i.connect(o), o.connect(r.destination), i.start(0), r.startRendering();
-                    var l = setTimeout(function () {
-                        return console.warn('Audio error "' + navigator.userAgent + '".'), r.oncomplete = function () {
-                        }, r = null, a("audioTimeout")
-                    }, t.timeout);
-                    r.oncomplete = function (e) {
-                        var t;
-                        try {
-                            clearTimeout(l), t = e.renderedBuffer.getChannelData(0).slice(4500, 5e3).reduce(function (e, t) {
-                                return e + Math.abs(t)
-                            }, 0).toString(), i.disconnect(), o.disconnect()
-                        } catch (e) {
-                            return void a(e)
-                        }
-                        a(t)
+            },
+                // {
+                //     key: "webgl",
+                //     getData: function (e, t) {
+                //         k() ? e(E()) : e(t.NOT_AVAILABLE)
+                //     }},
+                // {
+                //     key: "webglVendorAndRenderer",
+                //     getData: function (e) {
+                //         k() ? e(M()) : e()
+                //     }
+                // },
+                {
+                    key: "adBlock",
+                    getData: function (e) {
+                        e(x())
                     }
-                }
-            }, {
-                key: "enumerateDevices",
-                getData: function (t, e) {
-                    if (!a()) return t(e.NOT_AVAILABLE);
-                    navigator.mediaDevices.enumerateDevices().then(function (e) {
-                        t(e.map(function (e) {
-                            return "id=" + e.deviceId + ";gid=" + e.groupId + ";" + e.kind + ";" + e.label
-                        }))
-                    }).catch(function (e) {
-                        t(e)
-                    })
-                }
-            }],
+                }, {
+                    key: "hasLiedLanguages",
+                    getData: function (e) {
+                        e(O())
+                    }
+                }, {
+                    key: "hasLiedResolution",
+                    getData: function (e) {
+                        e(b())
+                    }
+                }, {
+                    key: "hasLiedOs",
+                    getData: function (e) {
+                        e(P())
+                    }
+                }, {
+                    key: "oscpu",
+                    getData: function (e) {
+                        e(getOscpu())
+                    }
+                }, {
+                    key: "isJavaEnabled",
+                    getData: function (e) {
+                        e(getJavaEnabled())
+                    }
+                }, {
+                    key: "appVersion",
+                    getData: function (e) {
+                        e(getAppVersion())
+                    }
+                }, {
+                    key: "languages",
+                    getData: function (e) {
+                        e(getLanguages())
+                    }
+                }, {
+                    key: "pluginsAvailable",
+                    getData: function (e) {
+                        e(getPluginAvailable())
+                    }
+                }, {
+                    key: "vendor",
+                    getData: function (e) {
+                        e(getVendor())
+                    }
+                }, {
+                    key: "vendorSub",
+                    getData: function (e) {
+                        e(getVendorSub())
+                    }
+                }, {
+                    key: "hasLiedBrowser",
+                    getData: function (e) {
+                        e(L())
+                    }
+                }, {
+                    key: "touchSupport",
+                    getData: function (e) {
+                        e(t())
+                    }
+                }, {
+                    key: "audioFormats",
+                    getData: function (e) {
+                        e(getAudioFormats())
+                    }
+                }, {
+                    key: "audioParameters",
+                    getData: function (e) {
+                        e(getAudioParams())
+                    }
+                }, {
+                    key: "videoFormats",
+                    getData: function (e) {
+                        e(getVideoFormats())
+                    }
+                }, {
+                    key: "fonts",
+                    getData: function (e, t) {
+                        var u = ["monospace", "sans-serif", "serif"],
+                            d = ["Andale Mono", "Arial", "Arial Black", "Arial Hebrew", "Arial MT", "Arial Narrow", "Arial Rounded MT Bold", "Arial Unicode MS", "Bitstream Vera Sans Mono", "Book Antiqua", "Bookman Old Style", "Calibri", "Cambria", "Cambria Math", "Century", "Century Gothic", "Century Schoolbook", "Comic Sans", "Comic Sans MS", "Consolas", "Courier", "Courier New", "Geneva", "Georgia", "Helvetica", "Helvetica Neue", "Impact", "Lucida Bright", "Lucida Calligraphy", "Lucida Console", "Lucida Fax", "LUCIDA GRANDE", "Lucida Handwriting", "Lucida Sans", "Lucida Sans Typewriter", "Lucida Sans Unicode", "Microsoft Sans Serif", "Monaco", "Monotype Corsiva", "MS Gothic", "MS Outlook", "MS PGothic", "MS Reference Sans Serif", "MS Sans Serif", "MS Serif", "MYRIAD", "MYRIAD PRO", "Palatino", "Palatino Linotype", "Segoe Print", "Segoe Script", "Segoe UI", "Segoe UI Light", "Segoe UI Semibold", "Segoe UI Symbol", "Tahoma", "Times", "Times New Roman", "Times New Roman PS", "Trebuchet MS", "Verdana", "Wingdings", "Wingdings 2", "Wingdings 3"];
+                        t.fonts.extendedJsFonts && (d = d.concat(["Abadi MT Condensed Light", "Academy Engraved LET", "ADOBE CASLON PRO", "Adobe Garamond", "ADOBE GARAMOND PRO", "Agency FB", "Aharoni", "Albertus Extra Bold", "Albertus Medium", "Algerian", "Amazone BT", "American Typewriter", "American Typewriter Condensed", "AmerType Md BT", "Andalus", "Angsana New", "AngsanaUPC", "Antique Olive", "Aparajita", "Apple Chancery", "Apple Color Emoji", "Apple SD Gothic Neo", "Arabic Typesetting", "ARCHER", "ARNO PRO", "Arrus BT", "Aurora Cn BT", "AvantGarde Bk BT", "AvantGarde Md BT", "AVENIR", "Ayuthaya", "Bandy", "Bangla Sangam MN", "Bank Gothic", "BankGothic Md BT", "Baskerville", "Baskerville Old Face", "Batang", "BatangChe", "Bauer Bodoni", "Bauhaus 93", "Bazooka", "Bell MT", "Bembo", "Benguiat Bk BT", "Berlin Sans FB", "Berlin Sans FB Demi", "Bernard MT Condensed", "BernhardFashion BT", "BernhardMod BT", "Big Caslon", "BinnerD", "Blackadder ITC", "BlairMdITC TT", "Bodoni 72", "Bodoni 72 Oldstyle", "Bodoni 72 Smallcaps", "Bodoni MT", "Bodoni MT Black", "Bodoni MT Condensed", "Bodoni MT Poster Compressed", "Bookshelf Symbol 7", "Boulder", "Bradley Hand", "Bradley Hand ITC", "Bremen Bd BT", "Britannic Bold", "Broadway", "Browallia New", "BrowalliaUPC", "Brush Script MT", "Californian FB", "Calisto MT", "Calligrapher", "Candara", "CaslonOpnface BT", "Castellar", "Centaur", "Cezanne", "CG Omega", "CG Times", "Chalkboard", "Chalkboard SE", "Chalkduster", "Charlesworth", "Charter Bd BT", "Charter BT", "Chaucer", "ChelthmITC Bk BT", "Chiller", "Clarendon", "Clarendon Condensed", "CloisterBlack BT", "Cochin", "Colonna MT", "Constantia", "Cooper Black", "Copperplate", "Copperplate Gothic", "Copperplate Gothic Bold", "Copperplate Gothic Light", "CopperplGoth Bd BT", "Corbel", "Cordia New", "CordiaUPC", "Cornerstone", "Coronet", "Cuckoo", "Curlz MT", "DaunPenh", "Dauphin", "David", "DB LCD Temp", "DELICIOUS", "Denmark", "DFKai-SB", "Didot", "DilleniaUPC", "DIN", "DokChampa", "Dotum", "DotumChe", "Ebrima", "Edwardian Script ITC", "Elephant", "English 111 Vivace BT", "Engravers MT", "EngraversGothic BT", "Eras Bold ITC", "Eras Demi ITC", "Eras Light ITC", "Eras Medium ITC", "EucrosiaUPC", "Euphemia", "Euphemia UCAS", "EUROSTILE", "Exotc350 Bd BT", "FangSong", "Felix Titling", "Fixedsys", "FONTIN", "Footlight MT Light", "Forte", "FrankRuehl", "Fransiscan", "Freefrm721 Blk BT", "FreesiaUPC", "Freestyle Script", "French Script MT", "FrnkGothITC Bk BT", "Fruitger", "FRUTIGER", "Futura", "Futura Bk BT", "Futura Lt BT", "Futura Md BT", "Futura ZBlk BT", "FuturaBlack BT", "Gabriola", "Galliard BT", "Gautami", "Geeza Pro", "Geometr231 BT", "Geometr231 Hv BT", "Geometr231 Lt BT", "GeoSlab 703 Lt BT", "GeoSlab 703 XBd BT", "Gigi", "Gill Sans", "Gill Sans MT", "Gill Sans MT Condensed", "Gill Sans MT Ext Condensed Bold", "Gill Sans Ultra Bold", "Gill Sans Ultra Bold Condensed", "Gisha", "Gloucester MT Extra Condensed", "GOTHAM", "GOTHAM BOLD", "Goudy Old Style", "Goudy Stout", "GoudyHandtooled BT", "GoudyOLSt BT", "Gujarati Sangam MN", "Gulim", "GulimChe", "Gungsuh", "GungsuhChe", "Gurmukhi MN", "Haettenschweiler", "Harlow Solid Italic", "Harrington", "Heather", "Heiti SC", "Heiti TC", "HELV", "Herald", "High Tower Text", "Hiragino Kaku Gothic ProN", "Hiragino Mincho ProN", "Hoefler Text", "Humanst 521 Cn BT", "Humanst521 BT", "Humanst521 Lt BT", "Imprint MT Shadow", "Incised901 Bd BT", "Incised901 BT", "Incised901 Lt BT", "INCONSOLATA", "Informal Roman", "Informal011 BT", "INTERSTATE", "IrisUPC", "Iskoola Pota", "JasmineUPC", "Jazz LET", "Jenson", "Jester", "Jokerman", "Juice ITC", "Kabel Bk BT", "Kabel Ult BT", "Kailasa", "KaiTi", "Kalinga", "Kannada Sangam MN", "Kartika", "Kaufmann Bd BT", "Kaufmann BT", "Khmer UI", "KodchiangUPC", "Kokila", "Korinna BT", "Kristen ITC", "Krungthep", "Kunstler Script", "Lao UI", "Latha", "Leelawadee", "Letter Gothic", "Levenim MT", "LilyUPC", "Lithograph", "Lithograph Light", "Long Island", "Lydian BT", "Magneto", "Maiandra GD", "Malayalam Sangam MN", "Malgun Gothic", "Mangal", "Marigold", "Marion", "Marker Felt", "Market", "Marlett", "Matisse ITC", "Matura MT Script Capitals", "Meiryo", "Meiryo UI", "Microsoft Himalaya", "Microsoft JhengHei", "Microsoft New Tai Lue", "Microsoft PhagsPa", "Microsoft Tai Le", "Microsoft Uighur", "Microsoft YaHei", "Microsoft Yi Baiti", "MingLiU", "MingLiU_HKSCS", "MingLiU_HKSCS-ExtB", "MingLiU-ExtB", "Minion", "Minion Pro", "Miriam", "Miriam Fixed", "Mistral", "Modern", "Modern No. 20", "Mona Lisa Solid ITC TT", "Mongolian Baiti", "MONO", "MoolBoran", "Mrs Eaves", "MS LineDraw", "MS Mincho", "MS PMincho", "MS Reference Specialty", "MS UI Gothic", "MT Extra", "MUSEO", "MV Boli", "Nadeem", "Narkisim", "NEVIS", "News Gothic", "News GothicMT", "NewsGoth BT", "Niagara Engraved", "Niagara Solid", "Noteworthy", "NSimSun", "Nyala", "OCR A Extended", "Old Century", "Old English Text MT", "Onyx", "Onyx BT", "OPTIMA", "Oriya Sangam MN", "OSAKA", "OzHandicraft BT", "Palace Script MT", "Papyrus", "Parchment", "Party LET", "Pegasus", "Perpetua", "Perpetua Titling MT", "PetitaBold", "Pickwick", "Plantagenet Cherokee", "Playbill", "PMingLiU", "PMingLiU-ExtB", "Poor Richard", "Poster", "PosterBodoni BT", "PRINCETOWN LET", "Pristina", "PTBarnum BT", "Pythagoras", "Raavi", "Rage Italic", "Ravie", "Ribbon131 Bd BT", "Rockwell", "Rockwell Condensed", "Rockwell Extra Bold", "Rod", "Roman", "Sakkal Majalla", "Santa Fe LET", "Savoye LET", "Sceptre", "Script", "Script MT Bold", "SCRIPTINA", "Serifa", "Serifa BT", "Serifa Th BT", "ShelleyVolante BT", "Sherwood", "Shonar Bangla", "Showcard Gothic", "Shruti", "Signboard", "SILKSCREEN", "SimHei", "Simplified Arabic", "Simplified Arabic Fixed", "SimSun", "SimSun-ExtB", "Sinhala Sangam MN", "Sketch Rockwell", "Skia", "Small Fonts", "Snap ITC", "Snell Roundhand", "Socket", "Souvenir Lt BT", "Staccato222 BT", "Steamer", "Stencil", "Storybook", "Styllo", "Subway", "Swis721 BlkEx BT", "Swiss911 XCm BT", "Sylfaen", "Synchro LET", "System", "Tamil Sangam MN", "Technical", "Teletype", "Telugu Sangam MN", "Tempus Sans ITC", "Terminal", "Thonburi", "Traditional Arabic", "Trajan", "TRAJAN PRO", "Tristan", "Tubular", "Tunga", "Tw Cen MT", "Tw Cen MT Condensed", "Tw Cen MT Condensed Extra Bold", "TypoUpright BT", "Unicorn", "Univers", "Univers CE 55 Medium", "Univers Condensed", "Utsaah", "Vagabond", "Vani", "Vijaya", "Viner Hand ITC", "VisualUI", "Vivaldi", "Vladimir Script", "Vrinda", "Westminster", "WHITNEY", "Wide Latin", "ZapfEllipt BT", "ZapfHumnst BT", "ZapfHumnst Dm BT", "Zapfino", "Zurich BlkEx BT", "Zurich Ex BT", "ZWAdobeF"]));
+                        d = (d = d.concat(t.fonts.userDefinedFonts)).filter(function (e, t) {
+                            return d.indexOf(e) === t
+                        });
+                        var a = document.getElementsByTagName("body")[0],
+                            r = document.createElement("div"),
+                            g = document.createElement("div"),
+                            n = {},
+                            i = {},
+                            f = function () {
+                                var e = document.createElement("span");
+                                return e.style.position = "absolute", e.style.left = "-9999px", e.style.fontSize = "72px", e.style.fontStyle = "normal", e.style.fontWeight = "normal", e.style.letterSpacing = "normal", e.style.lineBreak = "auto", e.style.lineHeight = "normal", e.style.textTransform = "none", e.style.textAlign = "left", e.style.textDecoration = "none", e.style.textShadow = "none", e.style.whiteSpace = "normal", e.style.wordBreak = "normal", e.style.wordSpacing = "normal", e.innerHTML = "mmmmmmmmmmlli", e
+                            },
+                            o = function (e) {
+                                for (var t = !1, a = 0; a < u.length; a++)
+                                    if (t = e[a].offsetWidth !== n[u[a]] || e[a].offsetHeight !== i[u[a]]) return t;
+                                return t
+                            },
+                            l = function () {
+                                for (var e = [], t = 0, a = u.length; t < a; t++) {
+                                    var n = f();
+                                    n.style.fontFamily = u[t], r.appendChild(n), e.push(n)
+                                }
+                                return e
+                            }();
+                        a.appendChild(r);
+                        for (var s = 0, c = u.length; s < c; s++) n[u[s]] = l[s].offsetWidth, i[u[s]] = l[s].offsetHeight;
+                        var h = function () {
+                            for (var e, t, a, n = {}, r = 0, i = d.length; r < i; r++) {
+                                for (var o = [], l = 0, s = u.length; l < s; l++) {
+                                    var c = (e = d[r], t = u[l], a = void 0, (a = f()).style.fontFamily = "'" + e + "'," + t, a);
+                                    g.appendChild(c), o.push(c)
+                                }
+                                n[d[r]] = o
+                            }
+                            return n
+                        }();
+                        a.appendChild(g);
+                        for (var m = [], T = 0, p = d.length; T < p; T++) o(h[d[T]]) && m.push(d[T]);
+                        a.removeChild(g), a.removeChild(r), e(m)
+                    },
+                    pauseBefore: !0
+                }, {
+                    key: "fontsFlash",
+                    getData: function (t, e) {
+                        return D() ? N() ? e.fonts.swfPath ? void _(function (e) {
+                            t(e)
+                        }, e) : t("missing options.fonts.swfPath") : t("flash not installed") : t("swf object not loaded")
+                    },
+                    pauseBefore: !0
+                }, {
+                    key: "audio",
+                    getData: function (a, e) {
+                        var t = e.audio;
+                        var check_os = navigator.userAgent.match(/OS 11.+Version\/11.+Safari/) || navigator.userAgent.match(/OS 13.+Version\/13.+Safari/)
+                        if (t.excludeIOS11 && check_os) return a(e.EXCLUDED);
+                        var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+                        if (null == n) return a(e.NOT_AVAILABLE);
+                        var r = new n(1, 44100, 44100),
+                            i = r.createOscillator();
+                        i.type = "triangle", i.frequency.setValueAtTime(1e4, r.currentTime);
+                        var o = r.createDynamicsCompressor();
+                        c([
+                            ["threshold", -50],
+                            ["knee", 40],
+                            ["ratio", 12],
+                            ["reduction", -20],
+                            ["attack", 0],
+                            ["release", .25]
+                        ], function (e) {
+                            void 0 !== o[e[0]] && "function" == typeof o[e[0]].setValueAtTime && o[e[0]].setValueAtTime(e[1], r.currentTime)
+                        }), i.connect(o), o.connect(r.destination), i.start(0), r.startRendering();
+                        var l = setTimeout(function () {
+                            return console.warn('Audio error "' + navigator.userAgent + '".'), r.oncomplete = function () {
+                            }, r = null, a("audioTimeout")
+                        }, t.timeout);
+                        r.oncomplete = function (e) {
+                            var t;
+                            try {
+                                clearTimeout(l), t = e.renderedBuffer.getChannelData(0).slice(4500, 5e3).reduce(function (e, t) {
+                                    return e + Math.abs(t)
+                                }, 0).toString(), i.disconnect(), o.disconnect()
+                            } catch (e) {
+                                return void a(e)
+                            }
+                            a(t)
+                        }
+                    }
+                }, {
+                    key: "enumerateDevices",
+                    getData: function (t, e) {
+                        if (!a()) return t(e.NOT_AVAILABLE);
+                        navigator.mediaDevices.enumerateDevices().then(function (e) {
+                            t(e.map(function (e) {
+                                return "id=" + e.deviceId + ";gid=" + e.groupId + ";" + e.kind + ";" + e.label
+                            }))
+                        }).catch(function (e) {
+                            t(e)
+                        })
+                    }
+                }],
             U = function (e) {
                 throw new Error("")
             };
