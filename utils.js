@@ -75,7 +75,7 @@ function loadFromIndexedDB() {
                         objectRequest.onsuccess = function (event) {
                             sidRequest.onsuccess = function (event) {
                                 if (objectRequest.result !== undefined) {
-                                    resolve([objectRequest.result.finger, sidRequest.result.sid]);
+                                    resolve([objectRequest.result.finger, sidRequest.result !== undefined ? sidRequest.result.sid : null]);
                                 } else resolve([null, null]);
                             }
                         };
