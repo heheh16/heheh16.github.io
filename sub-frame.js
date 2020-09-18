@@ -34,7 +34,7 @@ function init() {
             sessionStorage: sessionStorage.getItem(VERSION + '_finger_advanced'),
         };
         loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdb_data) {
-            fingers['indexedDB'] = indexdb_data[0];
+            fingers['indexedDB'] = indexdb_data !== null ? indexdb_data[0] : null;
             var hashPlaceData = fingers.indexedDB || fingers.localStorage || fingers.sessionStorage || 'No hash';
             hashPlace.innerHTML = hashPlaceData;
             btn.click()

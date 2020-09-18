@@ -151,18 +151,16 @@ function sendDataToServ(fingerprint, script, components) {
             };
 
 
-            var browserData = {
-                'hash': fingerprint,
-                'changes': 'No changes'
-            };
+            var changesData = 'No changes';
+
             var fingers = {
                 localStorage: localStorage.getItem(VERSION + '_finger_advanced'),
                 sessionStorage: sessionStorage.getItem(VERSION + '_finger_advanced'),
                 cookies: Cookies.get('finger_advanced')
             };
             loadFromIndexedDB(VERSION + '_fingerStore', 'advanced').then(function (indexdb_data) {
-                fingers['indexedDB'] = indexdb_data[0];
-                var indexDbSid = indexdb_data[1];
+                fingers['indexedDB'] = indexdb_data !== null ? indexdb_data[0] : null;
+                var indexDbSid = indexdb_data !== null ? indexdb_data[1] : null;
                 var localStorageSid = localStorage.getItem(VERSION + '_finger_sid_' + script);
                 var sessionStorageSid = sessionStorage.getItem(VERSION + '_finger_sid_' + script);
                 var cookiesSid = Cookies.get(VERSION + '_finger_sid_' + script);
@@ -175,6 +173,32 @@ function sendDataToServ(fingerprint, script, components) {
                     saveSidToIndexDB(session_id, script);
                 }
 
+                var prev_components = localStorage.getItem(VERSION + '_finger_components_' + script);
+
+                var firstString = ssdeep.digest(JSON.stringify(components));
+                similarity = 100;
+                var secondString = null;
+                if (prev_components !== null) {
+                    secondString = ssdeep.digest(prev_components);
+                    var similarity = ssdeep.similarity(firstString, secondString);
+                }
+
+                var browser_data = [];
+
+                components.map(function (component) {
+                    var key = component.key;
+                    var value = component.value;
+                    if(typeof(value) === 'object') {
+                        value = JSON.stringify(value)
+                    }
+                    browser_data.push(key+ ':' + value);
+                });
+
+                browser_data = browser_data.join('|||');
+
+
+
+
                 var request_obj = {
                     "sid": session_id,
                     "old_fingerprint_localstorage": fingers.localStorage || null,
@@ -182,16 +206,19 @@ function sendDataToServ(fingerprint, script, components) {
                     "old_fingerprint_indexdb": fingers.indexedDB || null,
                     "old_fingerprint_cookies": fingers.cookies || null,
                     "current_fingerprint": fingerprint,
-                    "browser_data": browserData
+                    "similarity": similarity,
+                    "browser_data": browser_data,
+                    "changes": changesData
                 };
 
-                var prev_components = JSON.parse(localStorage.getItem(VERSION + '_finger_components_' + script));
-                if (fingerprint !== request_obj.old_fingerprint_localstorage && prev_components !== null) {
+                console.log(request_obj);
+
+                var prevCompObj = JSON.parse(prev_components);
+                if (fingerprint !== request_obj.old_fingerprint_localstorage && prevCompObj !== null) {
                     var changes = [];
                     for (var i = 0; i < components.length; i++) {
-                        var prev_comp_item = prev_components[i];
+                        var prev_comp_item = prevCompObj[i];
                         var current_comp_item = components[i];
-
                         var equality = checkElementsEquality(prev_comp_item.value, current_comp_item.value);
                         if (equality === false) {
                             var change = current_comp_item.value;
@@ -202,17 +229,18 @@ function sendDataToServ(fingerprint, script, components) {
                         }
                     }
                     if (changes.length > 0) {
-                        request_obj['browser_data']['changes'] = changes.join('----------')
+                        changesData = changes.join('----------')
                     }
                 }
+                request_obj["changes"] = changesData;
 
-                // fetch(SERVER, {
-                //     method: 'POST',
-                //     headers: {
-                //         'Content-Type': 'application/json'
-                //     },
-                //     body: JSON.stringify(request_obj)
-                // });
+                /* fetch(SERVER, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(request_obj)
+                }); */
                 resolve(null)
             })
         })

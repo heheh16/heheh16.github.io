@@ -1,4 +1,25 @@
-var normalize = function(pos, size) {
+var forEach = function (array, callback) {
+    if (Array.prototype.forEach && array.forEach === Array.prototype.forEach) {
+        array.forEach(callback);
+    } else {
+        if (array.length === +array.length) {
+            /** @type {number} */
+            var i = 0;
+            var length = array.length;
+            for (; i < length; i++) {
+                callback(array[i], i);
+            }
+        } else {
+            var i;
+            for (i in array) {
+                if (array.hasOwnProperty(i)) {
+                    callback(array[i], i);
+                }
+            }
+        }
+    }
+};
+var normalize = function (pos, size) {
     /** @type {!Array} */
     pos = [pos[0] >>> 16, 65535 & pos[0], pos[1] >>> 16, 65535 & pos[1]];
     /** @type {!Array} */
@@ -12,7 +33,7 @@ var normalize = function(pos, size) {
  * @param {!Array} v
  * @return {?}
  */
-var add = function(e, v) {
+var add = function (e, v) {
     /** @type {!Array} */
     e = [e[0] >>> 16, 65535 & e[0], e[1] >>> 16, 65535 & e[1]];
     /** @type {!Array} */
@@ -26,7 +47,7 @@ var add = function(e, v) {
  * @param {number} n
  * @return {?}
  */
-var walk = function(m, n) {
+var walk = function (m, n) {
     return 32 === (n = n % 64) ? [m[1], m[0]] : n < 32 ? [m[0] << n | m[1] >>> 32 - n, m[1] << n | m[0] >>> 32 - n] : (n = n - 32, [m[1] << n | m[0] >>> 32 - n, m[0] << n | m[1] >>> 32 - n]);
 };
 /**
@@ -34,7 +55,7 @@ var walk = function(m, n) {
  * @param {number} n
  * @return {?}
  */
-var merge = function(m, n) {
+var merge = function (m, n) {
     return 0 === (n = n % 64) ? m : n < 32 ? [m[0] << n | m[1] >>> 32 - n, m[1] << n] : [m[1] << n - 32, 0];
 };
 /**
@@ -42,14 +63,14 @@ var merge = function(m, n) {
  * @param {!Array} fn
  * @return {?}
  */
-var get = function(ast, fn) {
+var get = function (ast, fn) {
     return [ast[0] ^ fn[0], ast[1] ^ fn[1]];
 };
 /**
  * @param {!Array} value
  * @return {?}
  */
-var table = function(value) {
+var table = function (value) {
     return value = get(value, [0, value[0] >>> 1]), value = add(value, [4283543511, 3981806797]), value = get(value, [0, value[0] >>> 1]), value = add(value, [3301882366, 444984403]), value = get(value, [0, value[0] >>> 1]);
 };
 
@@ -428,98 +449,98 @@ var table = function(value) {
                 }
                 return [e, t, "ontouchstart" in window]
             },
-        load = function(canvasElement) {
-            return function(text, a) {
-                a = a || 0;
-                /** @type {number} */
-                var n = (text = text || "").length % 16;
-                /** @type {number} */
-                var removeCount = text.length - n;
-                /** @type {!Array} */
-                var data = [0, a];
-                /** @type {!Array} */
-                var value = [0, a];
-                /** @type {!Array} */
-                var e = [0, 0];
-                /** @type {!Array} */
-                var c = [0, 0];
-                /** @type {!Array} */
-                var g = [2277735313, 289559509];
-                /** @type {!Array} */
-                var v = [1291169091, 658871167];
-                /** @type {number} */
-                var i = 0;
-                for (; i < removeCount; i = i + 16) {
+            load = function (canvasElement) {
+                return function (text, a) {
+                    a = a || 0;
+                    /** @type {number} */
+                    var n = (text = text || "").length % 16;
+                    /** @type {number} */
+                    var removeCount = text.length - n;
                     /** @type {!Array} */
-                    e = [255 & text.charCodeAt(i + 4) | (255 & text.charCodeAt(i + 5)) << 8 | (255 & text.charCodeAt(i + 6)) << 16 | (255 & text.charCodeAt(i + 7)) << 24, 255 & text.charCodeAt(i) | (255 & text.charCodeAt(i + 1)) << 8 | (255 & text.charCodeAt(i + 2)) << 16 | (255 & text.charCodeAt(i + 3)) << 24];
+                    var data = [0, a];
                     /** @type {!Array} */
-                    c = [255 & text.charCodeAt(i + 12) | (255 & text.charCodeAt(i + 13)) << 8 | (255 & text.charCodeAt(i + 14)) << 16 | (255 & text.charCodeAt(i + 15)) << 24, 255 & text.charCodeAt(i + 8) | (255 & text.charCodeAt(i + 9)) << 8 | (255 & text.charCodeAt(i + 10)) << 16 | (255 & text.charCodeAt(i + 11)) << 24];
-                    e = add(e, g);
-                    e = walk(e, 31);
-                    e = add(e, v);
-                    data = get(data, e);
-                    data = walk(data, 27);
-                    data = normalize(data, value);
-                    data = normalize(add(data, [0, 5]), [0, 1390208809]);
-                    c = add(c, v);
-                    c = walk(c, 33);
-                    c = add(c, g);
-                    value = get(value, c);
-                    value = walk(value, 31);
-                    value = normalize(value, data);
-                    value = normalize(add(value, [0, 5]), [0, 944331445]);
-                }
-                switch(e = [0, 0], c = [0, 0], n) {
-                    case 15:
-                        c = get(c, merge([0, text.charCodeAt(i + 14)], 48));
-                    case 14:
-                        c = get(c, merge([0, text.charCodeAt(i + 13)], 40));
-                    case 13:
-                        c = get(c, merge([0, text.charCodeAt(i + 12)], 32));
-                    case 12:
-                        c = get(c, merge([0, text.charCodeAt(i + 11)], 24));
-                    case 11:
-                        c = get(c, merge([0, text.charCodeAt(i + 10)], 16));
-                    case 10:
-                        c = get(c, merge([0, text.charCodeAt(i + 9)], 8));
-                    case 9:
-                        c = get(c, [0, text.charCodeAt(i + 8)]);
-                        c = add(c, v);
-                        c = walk(c, 33);
-                        c = add(c, g);
-                        value = get(value, c);
-                    case 8:
-                        e = get(e, merge([0, text.charCodeAt(i + 7)], 56));
-                    case 7:
-                        e = get(e, merge([0, text.charCodeAt(i + 6)], 48));
-                    case 6:
-                        e = get(e, merge([0, text.charCodeAt(i + 5)], 40));
-                    case 5:
-                        e = get(e, merge([0, text.charCodeAt(i + 4)], 32));
-                    case 4:
-                        e = get(e, merge([0, text.charCodeAt(i + 3)], 24));
-                    case 3:
-                        e = get(e, merge([0, text.charCodeAt(i + 2)], 16));
-                    case 2:
-                        e = get(e, merge([0, text.charCodeAt(i + 1)], 8));
-                    case 1:
-                        e = get(e, [0, text.charCodeAt(i)]);
+                    var value = [0, a];
+                    /** @type {!Array} */
+                    var e = [0, 0];
+                    /** @type {!Array} */
+                    var c = [0, 0];
+                    /** @type {!Array} */
+                    var g = [2277735313, 289559509];
+                    /** @type {!Array} */
+                    var v = [1291169091, 658871167];
+                    /** @type {number} */
+                    var i = 0;
+                    for (; i < removeCount; i = i + 16) {
+                        /** @type {!Array} */
+                        e = [255 & text.charCodeAt(i + 4) | (255 & text.charCodeAt(i + 5)) << 8 | (255 & text.charCodeAt(i + 6)) << 16 | (255 & text.charCodeAt(i + 7)) << 24, 255 & text.charCodeAt(i) | (255 & text.charCodeAt(i + 1)) << 8 | (255 & text.charCodeAt(i + 2)) << 16 | (255 & text.charCodeAt(i + 3)) << 24];
+                        /** @type {!Array} */
+                        c = [255 & text.charCodeAt(i + 12) | (255 & text.charCodeAt(i + 13)) << 8 | (255 & text.charCodeAt(i + 14)) << 16 | (255 & text.charCodeAt(i + 15)) << 24, 255 & text.charCodeAt(i + 8) | (255 & text.charCodeAt(i + 9)) << 8 | (255 & text.charCodeAt(i + 10)) << 16 | (255 & text.charCodeAt(i + 11)) << 24];
                         e = add(e, g);
                         e = walk(e, 31);
                         e = add(e, v);
                         data = get(data, e);
-                }
-                return data = get(data, [0, text.length]), value = get(value, [0, text.length]), data = normalize(data, value), value = normalize(value, data), data = table(data), value = table(value), data = normalize(data, value), value = normalize(value, data), ("00000000" + (data[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (data[1] >>> 0).toString(16)).slice(-8) + ("00000000" + (value[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (value[1] >>> 0).toString(16)).slice(-8);
-            }(canvasElement.toDataURL());
-        },
+                        data = walk(data, 27);
+                        data = normalize(data, value);
+                        data = normalize(add(data, [0, 5]), [0, 1390208809]);
+                        c = add(c, v);
+                        c = walk(c, 33);
+                        c = add(c, g);
+                        value = get(value, c);
+                        value = walk(value, 31);
+                        value = normalize(value, data);
+                        value = normalize(add(value, [0, 5]), [0, 944331445]);
+                    }
+                    switch (e = [0, 0], c = [0, 0], n) {
+                        case 15:
+                            c = get(c, merge([0, text.charCodeAt(i + 14)], 48));
+                        case 14:
+                            c = get(c, merge([0, text.charCodeAt(i + 13)], 40));
+                        case 13:
+                            c = get(c, merge([0, text.charCodeAt(i + 12)], 32));
+                        case 12:
+                            c = get(c, merge([0, text.charCodeAt(i + 11)], 24));
+                        case 11:
+                            c = get(c, merge([0, text.charCodeAt(i + 10)], 16));
+                        case 10:
+                            c = get(c, merge([0, text.charCodeAt(i + 9)], 8));
+                        case 9:
+                            c = get(c, [0, text.charCodeAt(i + 8)]);
+                            c = add(c, v);
+                            c = walk(c, 33);
+                            c = add(c, g);
+                            value = get(value, c);
+                        case 8:
+                            e = get(e, merge([0, text.charCodeAt(i + 7)], 56));
+                        case 7:
+                            e = get(e, merge([0, text.charCodeAt(i + 6)], 48));
+                        case 6:
+                            e = get(e, merge([0, text.charCodeAt(i + 5)], 40));
+                        case 5:
+                            e = get(e, merge([0, text.charCodeAt(i + 4)], 32));
+                        case 4:
+                            e = get(e, merge([0, text.charCodeAt(i + 3)], 24));
+                        case 3:
+                            e = get(e, merge([0, text.charCodeAt(i + 2)], 16));
+                        case 2:
+                            e = get(e, merge([0, text.charCodeAt(i + 1)], 8));
+                        case 1:
+                            e = get(e, [0, text.charCodeAt(i)]);
+                            e = add(e, g);
+                            e = walk(e, 31);
+                            e = add(e, v);
+                            data = get(data, e);
+                    }
+                    return data = get(data, [0, text.length]), value = get(value, [0, text.length]), data = normalize(data, value), value = normalize(value, data), data = table(data), value = table(value), data = normalize(data, value), value = normalize(value, data), ("00000000" + (data[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (data[1] >>> 0).toString(16)).slice(-8) + ("00000000" + (value[0] >>> 0).toString(16)).slice(-8) + ("00000000" + (value[1] >>> 0).toString(16)).slice(-8);
+                }(canvasElement.toDataURL());
+            },
             y = function (e) {
                 var t = [],
                     canvasElement = document.createElement("canvas");
                 canvasElement.width = 2e3, canvasElement.height = 200, canvasElement.style.display = "inline";
                 var ctx = canvasElement.getContext("2d");
                 var e = {
-                    winding : false,
-                    data : ""
+                    winding: false,
+                    data: ""
                 };
                 return ctx && canvasElement.toDataURL ? (ctx.rect(0, 0, 10, 10), ctx.rect(2, 2, 6, 6), e.winding = false === ctx.isPointInPath(5, 5, "evenodd"), ctx.textBaseline = "alphabetic", ctx.fillStyle = "#f60", ctx.fillRect(125, 1, 62, 20), ctx.fillStyle = "#069", ctx.font = "11pt no-real-font-123", ctx.fillText("Cwm fjordbank \ud83d\ude03 gly", 2, 15), ctx.fillStyle = "rgba(102, 204, 0, 0.2)", ctx.font = "18pt Arial", ctx.fillText("Cwm fjordbank \ud83d\ude03 gly", 4, 45), ctx.globalCompositeOperation =
                     "multiply", ctx.fillStyle = "rgb(255,0,255)", ctx.beginPath(), ctx.arc(50, 50, 50, 0, 2 * Math.PI, true), ctx.closePath(), ctx.fill(), ctx.fillStyle = "rgb(0,255,255)", ctx.beginPath(), ctx.arc(100, 50, 50, 0, 2 * Math.PI, true), ctx.closePath(), ctx.fill(), ctx.fillStyle = "rgb(255,255,0)", ctx.beginPath(), ctx.arc(75, 100, 50, 0, 2 * Math.PI, true), ctx.closePath(), ctx.fill(), ctx.fillStyle = "rgb(255,0,255)", ctx.arc(75, 75, 75, 0, 2 * Math.PI, true), ctx.arc(75, 75, 25, 0, 2 * Math.PI, true),
@@ -815,13 +836,13 @@ var table = function(value) {
                 //     key: "webgl",
                 //     getData: function (e, t) {
                 //         k() ? e(E()) : e(t.NOT_AVAILABLE)
-                //     }},
-                // {
-                //     key: "webglVendorAndRenderer",
-                //     getData: function (e) {
-                //         k() ? e(M()) : e()
-                //     }
-                // },
+                    //     }},
+                {
+                    key: "webglVendorAndRenderer",
+                    getData: function (e) {
+                        k() ? e(M()) : e()
+                    }
+                },
                 {
                     key: "adBlock",
                     getData: function (e) {
@@ -957,45 +978,55 @@ var table = function(value) {
                         }, e) : t("missing options.fonts.swfPath") : t("flash not installed") : t("swf object not loaded")
                     },
                     pauseBefore: !0
-                }, {
+                },
+                {
                     key: "audio",
-                    getData: function (a, e) {
-                        var t = e.audio;
-                        var check_os = navigator.userAgent.match(/OS 11.+Version\/11.+Safari/) || navigator.userAgent.match(/OS 13.+Version\/13.+Safari/)
-                        if (t.excludeIOS11 && check_os) return a(e.EXCLUDED);
-                        var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
-                        if (null == n) return a(e.NOT_AVAILABLE);
-                        var r = new n(1, 44100, 44100),
-                            i = r.createOscillator();
-                        i.type = "triangle", i.frequency.setValueAtTime(1e4, r.currentTime);
-                        var o = r.createDynamicsCompressor();
-                        c([
-                            ["threshold", -50],
-                            ["knee", 40],
-                            ["ratio", 12],
-                            ["reduction", -20],
-                            ["attack", 0],
-                            ["release", .25]
-                        ], function (e) {
-                            void 0 !== o[e[0]] && "function" == typeof o[e[0]].setValueAtTime && o[e[0]].setValueAtTime(e[1], r.currentTime)
-                        }), i.connect(o), o.connect(r.destination), i.start(0), r.startRendering();
-                        var l = setTimeout(function () {
-                            return console.warn('Audio error "' + navigator.userAgent + '".'), r.oncomplete = function () {
-                            }, r = null, a("audioTimeout")
-                        }, t.timeout);
-                        r.oncomplete = function (e) {
-                            var t;
-                            try {
-                                clearTimeout(l), t = e.renderedBuffer.getChannelData(0).slice(4500, 5e3).reduce(function (e, t) {
-                                    return e + Math.abs(t)
-                                }, 0).toString(), i.disconnect(), o.disconnect()
-                            } catch (e) {
-                                return void a(e)
+                    getData: function (wfcb) {
+                        !function (cb) {
+                            if (navigator.userAgent.match(/OS 11.+Version\/11.+Safari/)) {
+                                return cb(-1);
                             }
-                            a(t)
-                        }
+                            var indexedDbProviderTest_Context = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+                            if (null == indexedDbProviderTest_Context) {
+                                return cb(-2);
+                            }
+                            var context = new indexedDbProviderTest_Context(1, 44100, 44100);
+                            var osc = context.createOscillator();
+                            osc.type = "triangle";
+                            osc.frequency.setValueAtTime(1e4, context.currentTime);
+                            var node = context.createDynamicsCompressor();
+                            forEach([["threshold", -50], ["knee", 40], ["ratio", 12], ["reduction", -20], ["attack", 0], ["release", .25]], function (times) {
+                                if (void 0 !== node[times[0]] && "function" == typeof node[times[0]].setValueAtTime) {
+                                    node[times[0]].setValueAtTime(times[1], context.currentTime);
+                                }
+                            });
+                            osc.connect(node);
+                            node.connect(context.destination);
+                            osc.start(0);
+                            context.startRendering();
+                            var autoResumeTimer = setTimeout(function () {
+                                return context.oncomplete = function () {
+                                }, cb(-3);
+                            }, 1e3);
+
+                            context.oncomplete = function (event) {
+                                var iconCtx;
+                                try {
+                                    clearTimeout(autoResumeTimer);
+                                    iconCtx = event.renderedBuffer.getChannelData(0).slice(4500, 5e3).reduce(function (htmlbuffer, i) {
+                                        return htmlbuffer + Math.abs(i);
+                                    }, 0);
+                                    osc.disconnect();
+                                    node.disconnect();
+                                } catch (t) {
+                                    return void cb(-4);
+                                }
+                                cb(iconCtx);
+                            };
+                        }(wfcb);
                     }
-                }, {
+                },
+                {
                     key: "enumerateDevices",
                     getData: function (t, e) {
                         if (!a()) return t(e.NOT_AVAILABLE);
@@ -1102,25 +1133,17 @@ function getFinger() {
         function (resolve, reject) {
             var scriptName = 'advanced';
             AdvancedFingerprint.getPromise().then(function (components) {
-                var murmur;
-                if (Object.keys(components).length > 0) {
-                    var data = {};
-                    var values = components.map(function (component) {
-                        data[component.key] = component.value;
-                        return component.value
-                    });
-                    var returnedHash = 'No hash';
-                    murmur = AdvancedFingerprint.x64hash128(values.join(''), 31);
-                    sendDataToServ(murmur, scriptName, components).then(function () {
-                        setFingerToStorage(murmur, scriptName, components).then(function () {
-                            if (murmur.length > 0) {
-                                resolve(murmur)
-                            } else {
-                                resolve('No Hash')
-                            }
-                        })
+                var fingerPrint;
+                fingerPrint = ssdeep.digest(JSON.stringify(components));
+                sendDataToServ(fingerPrint, scriptName, components).then(function () {
+                    setFingerToStorage(fingerPrint, scriptName, components).then(function () {
+                        if (fingerPrint.length > 0) {
+                            resolve(fingerPrint)
+                        } else {
+                            resolve('No Hash')
+                        }
                     })
-                }
+                })
             });
         })
 }
