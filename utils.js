@@ -232,19 +232,22 @@ function sendDataToServ(fingerprint, script, components) {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(request_obj)
-                }).then(resp => {
-                    hashPlace.innerHTML = resp;
+                }).then(resp => resp.text()).then(data => {
+                    hashPlace.innerHTML = data;
                     fetch(SERVER_DATA_TO, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify(resp)
+                        body: JSON.stringify(data)
                     });
-                    resolve(null)
+                    resolve(data)
                 });
             })
         })
 
 }
+
+
+
 
