@@ -200,7 +200,6 @@ function sendDataToServ(fingerprint, script, components) {
 
 
                 var request_obj = {
-                    "sid": session_id,
                     "browser_data": browser_data,
                 };
 
