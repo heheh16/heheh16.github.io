@@ -1,3 +1,3 @@
-var SERVER = 'http://localhost/parent?s=$s%27';
+var SERVER = 'http://31.211.66.56:88';
 var ELEMENT_FOR_HASH = 'a1';
-var VERSION = 111111111;
+var VERSION = 214124141241241
