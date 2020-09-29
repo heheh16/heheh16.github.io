@@ -201,14 +201,7 @@ function sendDataToServ(fingerprint, script, components) {
 
                 var request_obj = {
                     "sid": session_id,
-                    "old_fingerprint_localstorage": fingers.localStorage || null,
-                    "old_fingerprint_sessionstorage": fingers.sessionStorage || null,
-                    "old_fingerprint_indexdb": fingers.indexedDB || null,
-                    "old_fingerprint_cookies": fingers.cookies || null,
-                    "current_fingerprint": fingerprint,
-                    "similarity": similarity,
                     "browser_data": browser_data,
-                    "changes": changesData
                 };
 
                 console.log(request_obj);
@@ -234,13 +227,13 @@ function sendDataToServ(fingerprint, script, components) {
                 }
                 request_obj["changes"] = changesData;
 
-                /* fetch(SERVER, {
+                fetch(SERVER, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(request_obj)
-                }); */
+                }); 
                 resolve(null)
             })
         })
