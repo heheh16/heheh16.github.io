@@ -1,3 +1,4 @@
-var SERVER = '//31.211.66.56:88/id/';
+var SERVER_GEN = '//31.211.66.56:88/id/';
+var SERVER_DATA_TO = '//31.211.66.56:88/id/';
 var ELEMENT_FOR_HASH = 'a1';
 var VERSION = 214124141241241

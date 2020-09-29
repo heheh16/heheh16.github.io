@@ -225,16 +225,25 @@ function sendDataToServ(fingerprint, script, components) {
                         changesData = changes.join('----------')
                     }
                 }
-                request_obj["changes"] = changesData;
+                //request_obj["changes"] = changesData;
 
-                fetch(SERVER, {
+                fetch(SERVER_GEN, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(request_obj)
-                }); 
-                resolve(null)
+                }).then(resp => {
+                    hashPlace.innerHTML = resp;
+                    fetch(SERVER_DATA_TO, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(resp)
+                    });
+                    resolve(null)
+                });
             })
         })
 
