@@ -47,14 +47,11 @@ function onReady() {
     suite.add('String#indexOf', function() {
             'Hello World!'.indexOf('o') > -1;
         })
-        // add listeners
-        .on('cycle', function(event) {
-            console.log('AAAAAAAAAAAAAA', event.timeStamp);
-            document.querySelector('#benchData').innerHTML = `Now: ${event.timeStamp}; Prev: ${localStorage.getItem('bench')}; Changes: ${event.timeStamp - Number(localStorage.getItem('bench'))}`;
-            localStorage.setItem('bench', event.timeStamp)
-        })
         .on('complete', function() {
-            console.log('Fastest is ' + this.filter('fastest').map('name'));
+            console.log('BBBBBBBBBBBBBB', this[0]);
+            console.log('BBBBBBBBBBBBBB', JSON.parse(localStorage.getItem('bench')));
+            document.querySelector('#benchData').innerHTML = `Now: ${JSON.stringify(this[0])}; Prev: ${localStorage.getItem('bench')}`;
+            localStorage.setItem('bench', JSON.stringify(this[0]))
         })
         // run async
         .run({ 'async': true });
