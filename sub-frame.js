@@ -41,8 +41,27 @@ function init() {
 }
 
 function onReady() {
+    var suite = new Benchmark.Suite;
+
+    // add tests
+    suite.add('String#indexOf', function() {
+            'Hello World!'.indexOf('o') > -1;
+        })
+        // add listeners
+        .on('cycle', function(event) {
+            console.log('AAAAAAAAAAAAAA', event.timeStamp);
+            document.querySelector('#benchData').innerHTML = `Now: ${event.timeStamp}; Prev: ${localStorage.getItem('bench')}; Changes: ${event.timeStamp - Number(localStorage.getItem('bench'))}`;
+            localStorage.setItem('bench', event.timeStamp)
+        })
+        .on('complete', function() {
+            console.log('Fastest is ' + this.filter('fastest').map('name'));
+        })
+        // run async
+        .run({ 'async': true });
     init();
 }
+
+
 
 ready(onReady);
 
