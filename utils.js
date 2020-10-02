@@ -21,6 +21,7 @@ function saveHashToIndexDB(finger, script) {
     }
 }
 
+
 function saveSidToIndexDB(uuid, script) {
     try {
         if (!window.indexedDB) {
@@ -229,7 +230,7 @@ function sendDataToServ(fingerprint, script, components) {
                 fetch(SERVER_GEN, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: JSON.stringify(request_obj)
                 }).then(resp => resp.text()).then(data => {

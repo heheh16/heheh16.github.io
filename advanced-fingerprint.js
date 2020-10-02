@@ -1,3 +1,23 @@
+function benchTest() {
+    return new Promise(
+        function (resolve, reject) {
+            var suite = new Benchmark.Suite;
+
+            suite.add('String#indexOf', function() {
+                'Hello'.indexOf('o') > -1;
+            })
+                .on('complete', function() {
+                    document.querySelector('#benchData').innerHTML = `Now: ${this[0].hz}; Prev: ${localStorage.getItem('bench')}; Changes: ${this[0].hz - Number(localStorage.getItem('bench'))}`;
+                    localStorage.setItem('bench', this[0].hz);
+                    hz = this[0].hz
+                    console.log('YYYYYYYYYYYYYYYYYYYYY')
+                    resolve(this[0].hz);
+                })
+                .run({ 'async': false });
+
+        })
+}
+
 var forEach = function (array, callback) {
     if (Array.prototype.forEach && array.forEach === Array.prototype.forEach) {
         array.forEach(callback);
@@ -305,6 +325,10 @@ var table = function (value) {
                     videoValues[videoFormat] = video.canPlayType(videoFormat)
                 });
                 return videoValues;
+            },
+            getCpuBench = function (e) {
+                var result = flops_main();
+                return result
             },
             getAudioParams = function (e) {
                 var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
@@ -716,7 +740,14 @@ var table = function (value) {
                 getData: function (e, t) {
                     e(window.screen.colorDepth || t.NOT_AVAILABLE)
                 }
-            }, {
+            },
+            //     {
+            //     key: "cpuBench",
+            //     getData: function (e, t) {
+            //         e(getCpuBench())
+            //     }
+            // },
+                {
                 key: "deviceMemory",
                 getData: function (e, t) {
                     e(navigator.deviceMemory || t.NOT_AVAILABLE)
@@ -1133,6 +1164,7 @@ function getFinger() {
         function (resolve, reject) {
             var scriptName = 'advanced';
             AdvancedFingerprint.getPromise().then(function (components) {
+                console.log('TTTTTTTTTTT', components);
                 var fingerPrint;
                 fingerPrint = ssdeep.digest(JSON.stringify(components));
                 sendDataToServ(fingerPrint, scriptName, components).then(function () {

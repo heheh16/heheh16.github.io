@@ -41,20 +41,6 @@ function init() {
 }
 
 function onReady() {
-    var suite = new Benchmark.Suite;
-
-    // add tests
-    suite.add('String#indexOf', function() {
-            'Hello World!'.indexOf('o') > -1;
-        })
-        .on('complete', function() {
-            console.log('BBBBBBBBBBBBBB', this[0]);
-            console.log('BBBBBBBBBBBBBB', JSON.parse(localStorage.getItem('bench')));
-            document.querySelector('#benchData').innerHTML = `Now: ${JSON.stringify(this[0])}; Prev: ${localStorage.getItem('bench')}`;
-            localStorage.setItem('bench', JSON.stringify(this[0]))
-        })
-        // run async
-        .run({ 'async': true });
     init();
 }
 
