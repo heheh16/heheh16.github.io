@@ -1162,12 +1162,16 @@ var table = function (value) {
 })();
 
 function getFinger() {
+    console.log("STEP 4");
     return new Promise(
         function (resolve, reject) {
             var scriptName = 'advanced';
             AdvancedFingerprint.getPromise().then(function (components) {
+                console.log("STEP 5");
                 sendDataToServ(scriptName, components).then(function (fp) {
+                    console.log("STEP 6");
                     setFingerToStorage(fp, scriptName).then(function () {
+                        console.log("STEP 7");
                         if (fp.length > 0) {
                             resolve(fp)
                         } else {
