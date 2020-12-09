@@ -30,6 +30,7 @@ function init() {
     } catch (e) {
         console.log('AAAAAAAAAAAAA', e)
     } finally {
+        console.log("OOOOOOOOOOOOOOOOO");
         btn.addEventListener('click', hashSetStorage);
         var fingers = {
             localStorage: localStorage.getItem(VERSION + '_finger_advanced'),

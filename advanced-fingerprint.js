@@ -798,12 +798,12 @@ var table = function (value) {
                     e(v(t))
                 }
             }, 
-            // {
-            //     key: "mediaDevices",
-            //     getData: function (e) {
-            //         getMediaDevices().then(function (data) { e(data) })
-            //     }
-            //     }
+            {
+                key: "mediaDevices",
+                getData: function (e) {
+                    getMediaDevices().then(function (data) { e(data) })
+                }
+                }
                 , {
                 key: "mimeTypes",
                 getData: function (e) {
