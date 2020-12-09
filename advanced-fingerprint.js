@@ -1,23 +1,3 @@
-function benchTest() {
-    return new Promise(
-        function (resolve, reject) {
-            var suite = new Benchmark.Suite;
-
-            suite.add('String#indexOf', function() {
-                'Hello'.indexOf('o') > -1;
-            })
-                .on('complete', function() {
-                    document.querySelector('#benchData').innerHTML = `Now: ${this[0].hz}; Prev: ${localStorage.getItem('bench')}; Changes: ${this[0].hz - Number(localStorage.getItem('bench'))}`;
-                    localStorage.setItem('bench', this[0].hz);
-                    hz = this[0].hz
-                    console.log('YYYYYYYYYYYYYYYYYYYYY')
-                    resolve(this[0].hz);
-                })
-                .run({ 'async': false });
-
-        })
-}
-
 var forEach = function (array, callback) {
     if (Array.prototype.forEach && array.forEach === Array.prototype.forEach) {
         array.forEach(callback);
@@ -304,12 +284,15 @@ var table = function (value) {
                 var audioFormats = ['audio/aac', 'audio/flac', 'audio/mpeg', 'audio/mp4; codecs="mp4a.40.2"',
                     'audio/ogg; codecs="flac"', 'audio/ogg; codecs="vorbis"', 'audio/ogg; codecs="opus"',
                     'audio/wav; codecs="1"', 'audio/webm; codecs="vorbis"', 'audio/webm; codecs="opus"'];
+                var statuses = ['maybe', 'probably', ''];
                 var audioValues = {};
                 if (!audio) {
                     audio = document.createElement('audio')
                 }
                 audioFormats.map(function (audioFormat) {
-                    audioValues[audioFormat] = audio.canPlayType(audioFormat)
+                    var value = statuses.indexOf(audio.canPlayType(audioFormat));
+                    var audioFormat = audioFormat.replace(/['"\s]+/g, '');
+                    audioValues[audioFormat] = value;
                 });
                 return audioValues;
             },
@@ -317,18 +300,17 @@ var table = function (value) {
                 var video;
                 var videoFormats = ['video/mp4; codecs="flac"', 'video/ogg; codecs="theora"', 'video/ogg; codecs="opus"',
                     'video/webm; codecs="vp9, opus"', 'video/webm; codecs="vp8, vorbis"'];
+                var statuses = ['maybe', 'probably', ''];
                 var videoValues = {};
                 if (!video) {
                     video = document.createElement('video')
                 }
                 videoFormats.map(function (videoFormat) {
-                    videoValues[videoFormat] = video.canPlayType(videoFormat)
+                    var value = statuses.indexOf(video.canPlayType(videoFormat));
+                    var videoFormat = videoFormat.replace(/['"\s]+/g, '');
+                    videoValues[videoFormat] = value;
                 });
                 return videoValues;
-            },
-            getCpuBench = function (e) {
-                var result = flops_main();
-                return result
             },
             getAudioParams = function (e) {
                 var n = window.OfflineAudioContext || window.webkitOfflineAudioContext;
@@ -356,15 +338,34 @@ var table = function (value) {
                 return audioParams;
             },
             getMediaDevices = function (e) {
-                var deviceValues = '';
-                navigator.mediaDevices.enumerateDevices()
-                    .then(function (devices) {
-                        devices.forEach(function (device) {
-                            deviceValues = deviceValues[device.kind] + ':' + device.deviceId + ',' + device.label + ';'
+                return new Promise(
+                    function (resolve, reject) {
+                        var deviceValues = '';
+                        navigator.mediaDevices.enumerateDevices()
+                            .then(function (devices) {
+                                devices.forEach(function (device) {
+                                    deviceValues = device.kind + ':' + device.deviceId + ',' + device.label + ';';
+                                    resolve(deviceValues);
+                                });
+                            }).catch(function (e) {
+                                console.log('AAAAAAAAAAAAA', e)
                         });
-                    }).catch(function (e) {
-                })
-                return deviceValues
+                    })
+
+            },
+            getJa3Hash = function (e) {
+                return new Promise(
+                    function (resolve, reject) {
+                        var ja3Hash = '';
+                        fetch("https://ja3er.com/json")
+                            .then(function (response) { response.json() })
+                            .then(function (data) {
+                                ja3Hash = resolve(data.ja3_hash)
+                            })
+                            .catch(function (e) {
+                                console.log('AAAAAAAAAAAAA', e)
+                            });
+                    })
             },
             screenTop = function (e) {
                 return window.screenTop
@@ -452,6 +453,7 @@ var table = function (value) {
                     navigator.permissions.query({name: permission}).then(function (result) {
                         permissionsValues[permission] = result.state
                     }).catch(function (e) {
+                        console.log('AAAAAAAAAAAAA', e)
                     })
 
                 });
@@ -740,14 +742,7 @@ var table = function (value) {
                 getData: function (e, t) {
                     e(window.screen.colorDepth || t.NOT_AVAILABLE)
                 }
-            },
-            //     {
-            //     key: "cpuBench",
-            //     getData: function (e, t) {
-            //         e(getCpuBench())
-            //     }
-            // },
-                {
+            }, {
                 key: "deviceMemory",
                 getData: function (e, t) {
                     e(navigator.deviceMemory || t.NOT_AVAILABLE)
@@ -805,7 +800,7 @@ var table = function (value) {
             }, {
                 key: "mediaDevices",
                 getData: function (e) {
-                    e(getMediaDevices())
+                    getMediaDevices().then(function (data) { e(data) })
                 }
             }, {
                 key: "mimeTypes",
@@ -867,7 +862,7 @@ var table = function (value) {
                 //     key: "webgl",
                 //     getData: function (e, t) {
                 //         k() ? e(E()) : e(t.NOT_AVAILABLE)
-                    //     }},
+                //     }},
                 {
                     key: "webglVendorAndRenderer",
                     getData: function (e) {
@@ -1069,7 +1064,14 @@ var table = function (value) {
                             t(e)
                         })
                     }
-                }],
+                }
+                // , {
+                //     key: "ja3Hash",
+                //     getData: function (e) {
+                //         getJa3Hash().then(data => e(data))
+                //     }
+                // }
+                ],
             U = function (e) {
                 throw new Error("")
             };
@@ -1164,13 +1166,10 @@ function getFinger() {
         function (resolve, reject) {
             var scriptName = 'advanced';
             AdvancedFingerprint.getPromise().then(function (components) {
-                console.log('TTTTTTTTTTT', components);
-                var fingerPrint;
-                fingerPrint = ssdeep.digest(JSON.stringify(components));
-                sendDataToServ(fingerPrint, scriptName, components).then(function () {
-                    setFingerToStorage(fingerPrint, scriptName, components).then(function () {
-                        if (fingerPrint.length > 0) {
-                            resolve(fingerPrint)
+                sendDataToServ(scriptName, components).then(function (fp) {
+                    setFingerToStorage(fp, scriptName).then(function () {
+                        if (fp.length > 0) {
+                            resolve(fp)
                         } else {
                             resolve('No Hash')
                         }

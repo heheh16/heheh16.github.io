@@ -176,7 +176,7 @@
         var h1 = HASH_INIT;
         var h2 = HASH_INIT;
         var rh = new RollHash();
-        //console.log(triggerValue)
+
         for (var i = 0, len = bytes.length; i < len; i++) {
             var thisByte = bytes[i];
 
