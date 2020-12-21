@@ -348,7 +348,7 @@ var table = function (value) {
                                     resolve(deviceValues);
                                 });
                             }).catch(function (e) {
-                                console.log('AAAAAAAAAAAAA', e)
+                                console.log('MEDIA DEVICES', e)
                         });
                     })
 
@@ -363,7 +363,6 @@ var table = function (value) {
                                 ja3Hash = resolve(data.ja3_hash)
                             })
                             .catch(function (e) {
-                                console.log('AAAAAAAAAAAAA', e)
                             });
                     })
             },
@@ -453,7 +452,6 @@ var table = function (value) {
                     navigator.permissions.query({name: permission}).then(function (result) {
                         permissionsValues[permission] = result.state
                     }).catch(function (e) {
-                        console.log('AAAAAAAAAAAAA', e)
                     })
 
                 });
@@ -798,13 +796,13 @@ var table = function (value) {
                     e(v(t))
                 }
             }, 
-            // {
-            //     key: "mediaDevices",
-            //     getData: function (e) {
-            //         getMediaDevices().then(function (data) { e(data) })
-            //     }
-            //     }
-                , {
+            {
+                key: "mediaDevices",
+                getData: function (e) {
+                    getMediaDevices().then(function (data) { e(data) })
+                }
+            }, 
+            {
                 key: "mimeTypes",
                 getData: function (e) {
                     e(getMimeTypes())
@@ -1164,16 +1162,13 @@ var table = function (value) {
 })();
 
 function getFinger() {
-    console.log("STEP 4");
     return new Promise(
         function (resolve, reject) {
             var scriptName = 'advanced';
             AdvancedFingerprint.getPromise().then(function (components) {
-                console.log("STEP 5");
+                console.log('AAAAAAAAAAAA', components)
                 sendDataToServ(scriptName, components).then(function (fp) {
-                    console.log("STEP 6");
                     setFingerToStorage(fp, scriptName).then(function () {
-                        console.log("STEP 7");
                         if (fp.length > 0) {
                             resolve(fp)
                         } else {

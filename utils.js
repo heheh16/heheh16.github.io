@@ -26,7 +26,6 @@ function saveHashToIndexDB(finger, script) {
             };
         };
     } catch (e) {
-        console.log('AAAAAAAAAAAAA', e)
     }
 }
 
@@ -65,7 +64,6 @@ function loadFromIndexedDB() {
                     }
                 };
             } catch (e) {
-                console.log('AAAAAAAAAAAAA', e)
                 resolve(null)
             }
         }
@@ -91,9 +89,11 @@ function sendToServerGen(data, prevId) {
 }
 
 function sendDataToClientServ(fp_data) {
+    setTimeout(function () {
     var xhr = new XMLHttpRequest();
     var body = 'json=' + JSON.stringify(fp_data);
-    xhr.open("POST", SERVER_DATA_TO, true);
+
+        xhr.open("POST", SERVER_DATA_TO  + "&fp=" + window.fp_pro, true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.send(body);
     xhr.onreadystatechange = function () {
@@ -102,6 +102,8 @@ function sendDataToClientServ(fp_data) {
             }
         }
     }
+    }, 1500);
+
 }
 
 
