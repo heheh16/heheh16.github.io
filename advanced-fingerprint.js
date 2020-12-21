@@ -341,6 +341,9 @@ var table = function (value) {
                 return new Promise(
                     function (resolve, reject) {
                         var deviceValues = '';
+                        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                            resolve("not supported")
+                        }
                         navigator.mediaDevices.enumerateDevices()
                             .then(function (devices) {
                                 devices.forEach(function (device) {
