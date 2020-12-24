@@ -711,7 +711,11 @@ var table = function (value) {
           "persistent-storage",
         ];
         var permissionsValues = {};
-        permissions.map(function (permission) {
+        var ua = navigator.userAgent.toLowerCase(); 
+        if (ua.indexOf('safari') === 1) { 
+          
+        } else {
+          permissions.map(function (permission) {
           navigator.permissions
             .query({ name: permission })
             .then(function (result) {
@@ -719,6 +723,8 @@ var table = function (value) {
             })
             .catch(function (e) {});
         });
+        }
+        
         return permissionsValues;
       },
       B = function (e) {
