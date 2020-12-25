@@ -135,7 +135,7 @@ function debugPrint(messageFunction) {
 function sendDataToServ(components) {
   debugPrint(function () {
     console.log("AVAILABLE BROWSE DATA:");
-    console.table(components);
+    console.log(components);
   });
   return new Promise(function (resolve) {
     var fingers = {
@@ -147,7 +147,8 @@ function sendDataToServ(components) {
       indexdb_data
     ) {
       fingers["indexedDB"] = indexdb_data !== null ? indexdb_data : null;
-      var permissions = components.find((item) => item.key === "permissions").value || [];
+      var permissions =
+        components.find((item) => item.key === "permissions").value || [];
       getGrantedData(permissions).then(function (data) {
         debugPrint(function () {
           console.log("5. DATA COLLECTED FROM GRANTS");

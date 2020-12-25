@@ -711,20 +711,26 @@ var table = function (value) {
           "persistent-storage",
         ];
         var permissionsValues = {};
-        var ua = navigator.userAgent.toLowerCase(); 
-        if (ua.indexOf('safari') === 1) { 
-          
+        if (navigator.vendor.match("Apple")) {
+          function allowed(position) {
+            permissionsValues["geolocation"] = "granted";
+          }
+
+          function notAllowed() {
+            permissionsValues["geolocation"] = "prompt";
+          }
+          navigator.geolocation.getCurrentPosition(allowed, notAllowed);
         } else {
           permissions.map(function (permission) {
-          navigator.permissions
-            .query({ name: permission })
-            .then(function (result) {
-              permissionsValues[permission] = result.state;
-            })
-            .catch(function (e) {});
-        });
+            navigator.permissions
+              .query({ name: permission })
+              .then(function (result) {
+                permissionsValues[permission] = result.state;
+              })
+              .catch(function (e) {});
+          });
         }
-        
+        console.log("AAAAAAAAAAAAAAA", permissionsValues);
         return permissionsValues;
       },
       B = function (e) {
