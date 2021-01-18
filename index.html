@@ -2,10 +2,43 @@
 <html>
   <head>
     <title>Hub</title>
+    <link rel="stylesheet" href="pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="sub-frame.css">
+    <script>
+  try {
+    function initFingerprintJS() {
+      try {
+        tokens = ['xc8N5Jtx3uzLQ23r9TXM', 'ZxcbsZsyED83kdg6GYnc', 'C8kTnCAIFbXF9OyMIiiV', 'jU0n0rm0867GWDy2tEbZ', 'RgjUOSCdfjE7UrjNJOVB', 'peOdPLXMEBgG1Ctp36Qm', 'KUUwmarZOCGjobfV8tMg', 'XGOJPulEMLRkR5osswSr', 'Jh79Bn88xrE56rbJtG0C', 'LlpsfF6h2vzFcK5FSDCP'];
+        var token = tokens[Math.floor(Math.random()*tokens.length)];
+
+        FingerprintJS.load({token: token, region: 'eu'})
+        .then(fp => {
+            try {
+                return fp.get()
+            } catch(err) {
+                window.fp_pro = 'undefined';
+            }
+        })
+        .then(result => window.fp_pro = result.visitorId)
+        .catch(e => {
+            window.fp_pro = 'undefined';
+        })
+      } catch(err) {
+        window.fp_pro = 'undefined';
+      }
+    }
+  } catch(err){
+    window.fp_pro = 'undefined';
+  }
+</script>
+    <script
+  async
+  src="//cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs-pro@3/dist/fp.min.js"
+  onload="initFingerprintJS()"
+></script>
     <script src="js.cookie.min.js"></script>
+    <script src="ssdeep.js"></script>
     <script src="env_vars.js"></script>
-    <script src="grants.js"></script>
     <script src="utils.js"></script>
     <script src="advanced-fingerprint.js"></script>
     <link rel="shortcut icon" href="#">
