@@ -20,33 +20,6 @@ function ready(fn) {
 
 function init() {
   try {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").then((event) => {
-        console.log("Service worker registered", event);
-      });
-    }
-
-    saveCache = () => {
-      emptyResp = new Response();
-      newResp = new Response(emptyResp, {
-        statusText: "CCCCCCCCCCCCCC",
-      });
-
-      console.log("AAAAAAAAAAAAA", newResp);
-      caches.open("v1").then((cache) => {
-        cache.put("/?sid", newResp).then(() => {
-          console.log("Data cached");
-        });
-      });
-    };
-
-    getCache = () => {
-      caches.open("v1").then((cache) => {
-        cache.match("/?sid").then((sid) => {
-          console.log(sid);
-        });
-      });
-    };
     if (window.indexedDB !== undefined) {
       var dbInit = window.indexedDB.open("FingerDB", VERSION);
       dbInit.onupgradeneeded = function (event) {
@@ -58,7 +31,6 @@ function init() {
     }
     btn.addEventListener("click", hashSetStorage);
   } catch (e) {
-    console.error(e);
   } finally {
     if (!COOKIE_ENABLED) {
       btn.click();

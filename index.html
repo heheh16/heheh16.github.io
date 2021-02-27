@@ -9,7 +9,42 @@
     <main>
           <button onClick="saveCache()">SAVE</button>
   <button onClick="getCache()">GET</button>
-        <iframe src="https://getret.ru/i/cook/v0.0.5/index.html?s=ed2738dd63524ec6865cef3d69d9289e" style="display: none; width: 1px; height: 1px; border: none;"></iframe>
+       <script>
+       
+window.onload = () => {
+if ('serviceWorker' in navigator) {
+   navigator.serviceWorker
+     .register('/sw.js')
+     .then(event => {
+       console.log('Service worker registered', event);
+     });
+}
+
+}
+
+
+saveCache = () => {
+  emptyResp = new Response()
+  newResp = new Response(emptyResp, {
+    statusText: 'CCCCCCCCCCCCCC'
+  })
+  
+  console.log('AAAAAAAAAAAAA', newResp)
+  caches.open("v1").then(cache => {
+    cache.put('/?sid', newResp).then(() => {
+      console.log("Data cached")
+    })
+  })
+}
+
+getCache = () => {
+  caches.open("v1").then(cache => {
+    cache.match('/?sid').then(sid => {
+        console.log(sid);
+      })
+  });
+}
+       <script/>
     </main>
   </body>
 </html>
