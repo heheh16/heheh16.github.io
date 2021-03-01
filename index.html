@@ -4,6 +4,7 @@
     <title>Hub</title>
     <link rel="stylesheet" href="pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="sub-frame.css">
+    <script></script>
   </head>
   <body>
     <main>
@@ -15,7 +16,12 @@
                                   navigator.serviceWorker
                                     .register('/sw.js')
                                     .then(event => {
-                                      console.log('Service worker registered', event);
+                                      console.log('FFFFFFFFFFFFF', event)
+                                    });
+
+
+                                    navigator.serviceWorker.addEventListener('message', event => {
+                                      console.log(event.data.msg, event.data.url);
                                     });
                                 }
 

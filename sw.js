@@ -1,24 +1,31 @@
-self.addEventListener('install', event => {
-  console.log('Installing [Service Worker]', event);
-
+self.addEventListener("install", function (event) {
+  console.log("AAAAAAAAAAAAAAAAAAAAAA");
   event.waitUntil(
-    caches.open('static')
-      .then(cache => {
-        console.log('[Service Worker] Precaching App Shell');
-        cache.addAll([
-          '/',
-          '/index.html',
-          '/favicon.ico',
-          '/src/js/app.js',
-          '/src/js/chart.js',
-          '/src/js/materialize.js',
-          '/src/js/materialize.min.js',
-          '/src/css/materialize.css',
-          '/src/css/materialize.min.css',
-          '/src/css/style.css',
-          'https://fonts.googleapis.com/icon?family=Material+Icons',
-          'https://code.jquery.com/jquery-2.1.1.min.js',
-          'https://cdn.jsdelivr.net/npm/chart.js@2.8.0'
-        ]);
-      }));
+    caches.open("v2").then(function (cache) {
+      return cache.addAll(["/"]);
+    })
+  );
+});
+
+addEventListener("fetch", (event) => {
+  event.waitUntil(
+    (async function () {
+      // Exit early if we don't have access to the client.
+      // Eg, if it's cross-origin.
+      if (!event.clientId) return;
+
+      // Get the client.
+      const client = await clients.get(event.clientId);
+      // Exit early if we don't get the client.
+      // Eg, if it closed.
+      if (!client) return;
+
+      // Send a message to the client.
+      console.log("TTTTTTTTTTTTTTTT", event.request);
+      client.postMessage({
+        msg: "Hey I just got a fetch from you!",
+        url: event.request.url,
+      });
+    })()
+  );
 });
