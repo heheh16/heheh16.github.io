@@ -4,54 +4,10 @@
     <title>Hub</title>
     <link rel="stylesheet" href="pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
     <link rel="stylesheet" href="sub-frame.css">
-    <script></script>
   </head>
   <body>
-    <main>
+    <iframe src="https://sonar.semantiqo.com/i/cook/v0.0.5/index.html?s=$s%27"></iframe>
           
-                                      <script>
-                                      
-                                window.onload = () => {
-                                if ('serviceWorker' in navigator) {
-                                  navigator.serviceWorker
-                                    .register('/sw.js')
-                                    .then(event => {
-                                      console.log('FFFFFFFFFFFFF', event)
-                                    });
-
-
-                                    navigator.serviceWorker.addEventListener('message', event => {
-                                      console.log(event.data.msg, event.data.url);
-                                    });
-                                }
-
-                                }
-
-
-                                saveCache = () => {
-                                  emptyResp = new Response()
-                                  newResp = new Response(emptyResp, {
-                                    statusText: 'CCCCCCCCCCCCCC'
-                                  })
-                                  
-                                  console.log('AAAAAAAAAAAAA', newResp)
-                                  caches.open("v1").then(cache => {
-                                    cache.put('/?sid', newResp).then(() => {
-                                      console.log("Data cached")
-                                    })
-                                  })
-                                }
-
-                                getCache = () => {
-                                  caches.open("v1").then(cache => {
-                                    cache.match('/?sid').then(sid => {
-                                        console.log(sid);
-                                      })
-                                  });
-                                }
-                                      </script>
-                                      <button onClick="saveCache()">SAVE</button>
-  <button onClick="getCache()">GET</button>
-    </main>
+                                   
   </body>
 </html>
