@@ -1,67 +1,29 @@
-// let duplicateRequest = false;
-// self.addEventListener("install", function (event) {
-//   console.log("AAAAAAAAAAAAAAAAAAAAAA");
-//   event.waitUntil(
-//     caches.open("v2").then(function (cache) {
-//       return cache.addAll(["/"]);
-//     })
-//   );
-// });
+let installDate, id;
 
-// addEventListener("fetch", (event) => {
-//   event.waitUntil(
-//     (async function () {
-//       if (
-//         event.request.url === "https://jsonplaceholder.typicode.com/todos/1" &&
-//         duplicateRequest === false
-//       ) {
-//         duplicateRequest = true;
-//         console.log("SEND REQUEST");
-//       } else {
-//         console.log("DUPLICATE");
-//       }
-// if (!event.clientId)
-//   return;
-
-// const client = await clients.get(event.clientId);
-
-// if (!client) return;
-
-// console.log("TTTTTTTTTTTTTTTT", event.request);
-// console.log("JJJJJJJJJJJJJJJJJ", a);
-// client.postMessage({
-//   msg: "Hey I just got a fetch from you!",
-//   url: event.request.url,
-// });
-//     })()
-//   );
-// });
-
-self.addEventListener("install", (event) => {
-  console.log("V1 installing…");
-
-  // cache a cat SVG
-  event.waitUntil(caches.open("static-v1").then((cache) => cache.add("/")));
+const setData = new Promise((resolve, reject) => {
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA");
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA", installDate);
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAA", id);
+  const uuid = ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(
+    /[018]/g,
+    function (c) {
+      return (
+        c ^
+        (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (c / 4)))
+      ).toString(16);
+    }
+  );
+  id = uuid;
+  installDate = new Date().toUTCString();
+  resolve(true);
 });
 
-self.addEventListener("activate", (event) => {
-  console.log("V1 now ready to handle fetches!");
+self.addEventListener("install", function (event) {
+  event.waitUntil(setData);
 });
 
-addEventListener("message", async (event) => {
-  // event is an ExtendableMessageEvent object
-  console.log(`The client sent me a message: ${event.data}`);
-  const resp = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-  const result = await resp.json();
-  event.source.postMessage(JSON.stringify(result));
-});
+self.addEventListener("activate", function (event) {});
 
-self.addEventListener("fetch", (event) => {
-  const url = new URL(event.request.url);
-
-  // serve the cat SVG from the cache if the request is
-  // same-origin and the path is '/dog.svg'
-  if (url.origin == location.origin && url.pathname == "/dog.svg") {
-    event.respondWith(caches.match("/cat.svg"));
-  }
+addEventListener("message", (event) => {
+  event.source.postMessage(JSON.stringify({ SwDate: installDate, SwId: id }));
 });
